@@ -30,8 +30,8 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  /* display: flex; */
+  /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }
@@ -53,7 +53,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #34056d;
 }
 button:focus,
 button:focus-visible {
@@ -71,4 +71,31 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+
+/* Spinner.css */
+
+/* Container for centering the spinner */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* You can adjust width/height here if you need a specific size, e.g., height: 100vh; */
+}
+
+/* The actual spinning element */
+.spinner {
+  width: 50px; /* Size */
+  height: 50px; /* Size */
+  border: 5px solid #f3f3f3; /* Light grey circle background */
+  border-top: 5px solid #3498db; /* Blue color for the top/spinning part */
+  border-radius: 50%;
+  animation: spin 1s linear infinite; /* Animation definition */
+}
+
+/* Keyframe animation for the rotation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

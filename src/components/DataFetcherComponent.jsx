@@ -3,11 +3,15 @@ import { createCustomerUrl } from '../url/url'
 import { getPublicMenuUrl } from '../url/url'
 
 import { useState, useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
+
 import axios from 'axios'
 import Spinner from './Spinner'
 
 
 function DataFetcherComponent() {
+
+  const navigate = useNavigate()
   const [dataParam, setDataParam] = useState(null);
   const [sParam, setSParam] = useState(null);
   const [sessionToken, setSessionToken] = useState(null);
@@ -111,6 +115,7 @@ const body = formData;
       );
 
      if (createRes.data.status === "success") {
+    
       const token = localStorage.getItem("sessionToken");
       const menuRes = await axios.get(
         getPublicMenuUrl,
@@ -123,6 +128,7 @@ const body = formData;
       )
       console.log("Create Customer Response:", createRes.data);
       console.log("menu Res:", menuRes.data)
+      navigate("/menu", { state: menuRes.data });
       setLoading(false)
       
      }

@@ -1,5 +1,3 @@
-// import AppRouter from "./routes/routes"
-
 import React from 'react';
 import {
   BrowserRouter as Router,
@@ -7,30 +5,17 @@ import {
   Route
 } from 'react-router-dom';
 
-import Menu from "./pages/Menu";
-import CustomerLogin from "./pages/CustomerLogin";
+import Menu from '../pages/Menu';
+import Home from '../pages/Home';
 
-function App() {
-
+export default function AppRouter() {
   return (
-    
- <Router>
+    <Router>
       <Routes>
-        <Route path="/" element={<CustomerLogin />} />
+        {/* <Route path="/" element={<Home />} /> */}
         <Route path="/menu" element={<Menu />} />
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </Router>
-
-  )
+  );
 }
-
-export default App
-
-
-
-
-
-
-
-

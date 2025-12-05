@@ -271,10 +271,10 @@ export default function Menu() {
         />
       )}
 
-      <hr className="mb-5 sm:mb-6 border-amber-200" />
+      <hr className="mb-5 sm:mb-4 border-amber-200" />
 
       {/* Menu Items Grid */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-6 pb-32">
         {menus.map((item) => {
           const cartItem = cartItems.find(cartItem => cartItem.id === item.id);
           const quantity = cartItem ? cartItem.quantity : 0;
@@ -282,30 +282,32 @@ export default function Menu() {
           return (
             <div
               key={item.id}
-              className="bg-white rounded-xl shadow hover:shadow-lg transition duration-300 p-4 flex flex-col border border-amber-100"
+             className="w-full bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 p-4 sm:p-5 border border-gray-100 hover:border-amber-300 flex flex-col h-full"
             >
               <img
                 src={item.image}
                 alt={item.name}
-                className="w-full h-40 object-cover rounded-lg sm:h-48"
+                className="w-full h-40 sm:h-48 object-cover rounded-lg shadow-sm mb-3"
               />
 
-              <h2 className="text-lg font-semibold mt-3 text-gray-800 grow sm:text-xl">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-2">
                 {item.name}
               </h2>
 
-              <p className="text-gray-600 text-xs mt-2 line-clamp-2 sm:text-sm">
+              <p className="text-gray-600 text-xs sm:text-sm mt-1 line-clamp-2 flex-1">
                 {item.description}
               </p>
 
-              <div className="flex justify-between items-center mt-3 sm:mt-4">
-                <p className="text-lg font-bold text-amber-600">
-                  ETB {item.price}
-                </p>
-                <p className="text-xs text-gray-500 sm:text-sm">
-                  ⭐ {item.rating} | {item.prepTime}
-                </p>
-              </div>
+               {/* Price and Rating Row */}
+                <div className="flex justify-between items-start mt-3 mb-3">
+                  <p className="text-lg sm:text-xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+                    ETB {item.price}
+                  </p>
+                  <div className="text-right">
+                    <p className="text-xs text-gray-500">⭐ {item.rating}</p>
+                    <p className="text-xs text-amber-600 font-semibold">{item.prepTime}</p>
+                  </div>
+                </div>
               
               {quantity > 0 ? (
                 <div className="mt-3 flex justify-between items-center bg-amber-50 border border-amber-400 rounded-lg p-1 sm:p-2">

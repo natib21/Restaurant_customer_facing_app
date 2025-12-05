@@ -62,8 +62,8 @@ button:focus-visible {
 .spinner {
   width: 50px; /* Size */
   height: 50px; /* Size */
-  border: 5px solid #f3f3f3; /* Light grey circle background */
-  border-top: 5px solid #3498db; /* Blue color for the top/spinning part */
+  border: 5px solid #06001e; /* Light grey circle background */
+  border-top: 5px solid #b9a20a; /* Blue color for the top/spinning part */
   border-radius: 50%;
   animation: spin 1s linear infinite; /* Animation definition */
 }

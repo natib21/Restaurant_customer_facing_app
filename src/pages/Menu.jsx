@@ -30,7 +30,7 @@ const CartModal = ({
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg shadow-2xl p-5 w-11/12 max-w-2xl max-h-[90vh] overflow-y-auto transform transition duration-300 scale-100 sm:p-6">
         <div className="flex justify-between items-center border-b border-amber-200 pb-3 mb-4">
-          <h2 className="text-xl font-bold text-gray-800 sm:text-2xl">Shopping Cart</h2>
+          <h2 className="text-xl font-bold text-gray-800 sm:text-2xl">Your Selection</h2>
           <button
             onClick={onClose}
             className="text-amber-500 hover:text-amber-700 text-3xl leading-none"
@@ -100,7 +100,7 @@ const CartModal = ({
 
         <div className="mt-6 pt-4 border-t-2 border-amber-200 flex justify-between items-center">
           <span className="text-xl font-bold text-gray-800">Total:</span>
-          <span className="text-2xl font-extrabold text-amber-600 sm:text-3xl">
+          <span className="text-lg md:text-xl lg:text-2xl font-extrabold text-amber-600 sm:text-3xl">
             ETB {totalSum.toFixed(2)}
           </span>
         </div>
@@ -145,34 +145,6 @@ const CartFooter = ({ totalSum, totalItems, onOpen }) => {
   );
 };
 
-// 🍽️ Header Component (Restaurant Name + Cart)
-// const MenuHeader = ({ restaurant, cartItems, onOpenCart }) => {
-//   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-
-//   return (
-//    <header className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between md:gap-6 mb-6 md:mb-8 lg:mb-10 bg-white rounded-lg p-4 md:p-6 border border-gray-100 shadow-sm">
-//       {/* Restaurant Name */}
-//       <div className="mb-6 sm:mb-8">
-//           <h1 className="text-2xl sm:text-3xl md:text-3xl font-black bg-linear-to-r from-gray-900 via-amber-600 to-gray-900 bg-clip-text text-transparent">
-//             {restaurant}
-//           </h1>
-//         </div>
-
-//       {/* Cart Summary */}
-//       {totalItems > 0 && (
-//         <button
-//           onClick={onOpenCart}
-//           className="flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-gray-900 px-4 md:px-5 py-2 md:py-3 rounded-lg font-semibold text-sm md:text-base transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap"
-//         >
-//           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-//             <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-//           </svg>
-//           <span className="font-bold">{totalItems}</span>
-//         </button>
-//       )}
-//     </header>
-//   );
-// };
 function RestaurantHeader({ restaurantName, totalItems, onCartOpen }) {
   return (
     <header className="flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between md:gap-6 mb-6 md:mb-8 lg:mb-10 bg-white rounded-lg p-3 sm:p-4 md:p-5 border border-gray-100 shadow-sm sticky top-0 z-30">
@@ -181,14 +153,14 @@ function RestaurantHeader({ restaurantName, totalItems, onCartOpen }) {
         <h1 className="text-lg sm:text-xl md:text-xl font-bold bg-linear-to-r from-gray-900 to-amber-600 bg-clip-text text-transparent truncate">
           {restaurantName}
         </h1>
-        <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Delicious food delivered</p>
+        <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Delicious food for you</p>
       </div>
 
       {/* Cart Summary */}
       {totalItems > 0 && (
         <button
           onClick={onCartOpen}
-          className="flex items-center gap-2 bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-gray-900 px-3 md:px-4 py-2 md:py-2.5 rounded-lg font-semibold text-sm md:text-base transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap flex-shrink-0"
+          className="flex items-center gap-2 bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-gray-900 px-3 md:px-4 py-2 md:py-2.5 rounded-lg font-semibold text-sm md:text-base transition-all duration-200 shadow-md hover:shadow-lg whitespace-nowrap shrink-0"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -278,7 +250,7 @@ export default function Menu() {
     );
   }, [cartItems]);
 
-  // const footerPaddingClass = totalItems > 0 ? 'pb-[85px]' : 'pb-4'; 
+
 
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-50 flex flex-col">
@@ -287,13 +259,6 @@ export default function Menu() {
 
       {/* Main Content Area - Scrollable */}
       <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
-        {/* Title */}
-        {/* <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl md:text-3xl font-black bg-linear-to-r from-gray-900 via-amber-600 to-gray-900 bg-clip-text text-transparent">
-            {restaurant}
-          </h1>
-        </div> */}
-
         {/* <hr className="mb-6 sm:mb-8 border-gray-200" /> */}
 
         {/* Menu Items - Card Layout Mobile First */}
@@ -321,7 +286,7 @@ export default function Menu() {
 
                 {/* Price and Rating Row */}
                 <div className="flex justify-between items-start mt-3 mb-3">
-                  <p className="text-lg sm:text-xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+                  <p className="text-lg sm:text-xl font-bold bg-linear-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
                     ETB {item.price}
                   </p>
                   <div className="text-right">
@@ -333,7 +298,7 @@ export default function Menu() {
                 {/* Action Buttons */}
                 {quantity > 0 ? (
                   <div className="mt-auto flex flex-col gap-2">
-                    <div className="flex items-center justify-between gap-1 sm:gap-2 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-lg p-2">
+                    <div className="flex items-center justify-between gap-1 sm:gap-2 bg-linear-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-lg p-2">
                       <button
                         onClick={() => handleUpdateQuantity(item.id, -1)}
                         className="flex-1 py-1 px-1.5 text-amber-700 hover:bg-amber-200 rounded transition font-bold text-sm"
@@ -351,7 +316,7 @@ export default function Menu() {
                       </button>
                       <button
                         onClick={() => handleRemoveItem(item.id)}
-                        className="flex-1 text-red-500 hover:text-red-700 transition hover:bg-red-50 rounded-lg py-1"
+                        className="flex-1 text-red-950 hover:text-red-900 transition hover:bg-red-50 rounded-lg py-1"
                         aria-label="Remove item"
                       >
                         <svg
@@ -401,7 +366,7 @@ export default function Menu() {
             {/* Total Sum Display */}
             <div className="flex flex-col">
               <span className="text-xs sm:text-sm font-medium text-amber-300 uppercase tracking-wider">
-                Order Total ({totalItems})
+                Total cart ({totalItems})
               </span>
               <span className="text-2xl sm:text-3xl font-extrabold text-white">ETB {totalSum.toFixed(2)}</span>
             </div>
@@ -409,9 +374,9 @@ export default function Menu() {
             {/* View Order Button */}
             <button
               onClick={() => setIsModalOpen(true)}
-              className="w-full sm:w-auto bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-gray-900 font-bold py-3 px-6 rounded-full transition-all duration-200 shadow-lg shadow-amber-500/50 hover:shadow-amber-500/70 uppercase tracking-wide text-sm sm:text-base flex-shrink-0"
+              className="w-full sm:w-auto bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-gray-900 font-bold py-3 px-6 rounded-full transition-all duration-200 shadow-lg shadow-amber-500/50 hover:shadow-amber-500/70 uppercase tracking-wide text-sm sm:text-base shrink-0"
             >
-              View Order
+              Review Cart
             </button>
           </div>
         </div>

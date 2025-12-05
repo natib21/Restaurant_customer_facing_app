@@ -86,37 +86,42 @@ async function startSession() {
       //Store in localStorage
       localStorage.setItem("sessionToken", token);
 
-      customerLogin()
+      // customerLogin()
+       setLoading(false)
 
       
     }
 
   } catch (err) {
+    setLoading(false)
     console.error("Error:", err.response?.data || err.message);
   }
 }
 
 async function customerLogin () {
 
+  try {
+
   const token = localStorage.getItem("sessionToken");
 
 const body = formData;
+console.log("body", body)
 
      
-      const createRes = await axios.post(
-        createCustomerUrl,
-        body,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      // const createRes = await axios.post(
+      //   createCustomerUrl,
+      //   body,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
 
-     if (createRes.data.status === "success") {
-    
-      const token = localStorage.getItem("sessionToken");
+    //  if (createRes.data.status === "success") {
+     
+    //   const token = localStorage.getItem("sessionToken");
       const menuRes = await axios.get(
         getPublicMenuUrl,
         {
@@ -126,14 +131,20 @@ const body = formData;
           }
         }
       )
-      console.log("Create Customer Response:", createRes.data);
+   
+      // console.log("Create Customer Response:", createRes.data);
       console.log("menu Res:", menuRes.data)
       navigate("/menu", { state: menuRes.data });
       setLoading(false)
       
+     
+    // }
+    } catch(error) {
+      console.error("Error fetching menu:", error);
+        setLoading(false);
+        
      }
-    }
-
+}
 
   
 
@@ -155,6 +166,9 @@ const body = formData;
   return (
     
     <div className='bg-amber-200 border-black border-8 h-1/2 w-1/2 mx-auto my-auto'>
+       <button className='text-white bg-amber-300 ml-1.5 py-2 px-4 rounded-2xl' onClick={()=>customerLogin()}>
+       Login
+    </button>
      
       
       {loading ? (
@@ -199,8 +213,11 @@ const body = formData;
       >
         Submit
       </button>
+      
+
     </form>
 
+   
 
       }
     </div>

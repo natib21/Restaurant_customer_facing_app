@@ -1,10 +1,10 @@
-// DataFetcherComponent.jsx
 import { getPublicMenuUrl, createCustomerUrl } from '../url/url';
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Spinner from './Spinner';
 import { useStartSession } from '../hooks/useStartSession';
+import LoginForm from './LoginForm';
 
 function DataFetcherComponent() {
 
@@ -33,37 +33,26 @@ function DataFetcherComponent() {
     try {
       const body = formData;
 
-      // const token = localStorage.getItem("sessionToken")
+     
       console.log("Customer Creation Body:", body);
       
-      // STEP 1: CREATE/UPDATE CUSTOMER 
-      // const createRes = await axios.post({
-      //   createCustomerUrl,
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //       "Content-Type": "application/json",
-      //     },
-        
-      //   body,
-      // }
-        
-      // );
 
-      const createRes = await axios.post(
-  createCustomerUrl,     // URL
-  body,                  // Body (your JSON object)
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  }
-);
+
+       const createRes = await axios.post(
+        createCustomerUrl,    
+        body,                  
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       console.log("Create Customer Response:", createRes.data);
 
 
-      // 🚀 STEP 2: FETCH MENU 🚀
+      //  STEP 2: FETCH MENU 
       const menuRes = await axios.get(
         getPublicMenuUrl,
         {
@@ -143,198 +132,14 @@ function DataFetcherComponent() {
     }
   };
 
-  // --- Component Rendering (Improved UI: Better contrast for inputs and banner) ---
+  
   return (
-    // <div className='min-h-screen bg-amber-50 flex items-center justify-center p-4'>
-      
-    //   <div className='w-full max-w-md bg-white p-8 rounded-xl shadow-2xl border border-amber-200'>
-        
-    //     <h2 className='text-3xl font-extrabold text-amber-700 mb-4 text-center tracking-tight'>
-    //       ✨ Welcome, Guest!
-    //     </h2>
-
-    //     <div className='bg-amber-100 border-2 border-amber-300 rounded-lg p-4 mb-6 shadow-inner'>
-    //       <p className='text-amber-900 font-bold text-center text-base leading-relaxed'>
-    //         Please fill out the form to view the menu and place your order, dear guest! 🍽️
-    //       </p>
-    //     </div>
-        
-    //     {loading ? (
-    //       <div className='flex justify-center py-12'>
-    //         <Spinner />
-    //         <p className='ml-3 text-amber-600 font-semibold'>Processing...</p>
-    //       </div>
-    //     ) : (
-    //       <form onSubmit={handleSubmit} className="space-y-6">
-            
-    //         <div>
-    //           <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
-    //             Full Name
-    //           </label>
-    //           <input
-    //             type="text"
-    //             name="fullName"
-    //             id="fullName"
-    //             placeholder="Enter your full name"
-    //             value={formData.fullName}
-    //             onChange={handleChange}
-    //             required
-    //             className="block w-full px-4 py-3 text-gray-900 placeholder-gray-500 border-2 border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition duration-150 bg-white"
-    //           />
-    //         </div>
-
-    //         <div>
-    //           <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-    //             Phone Number
-    //           </label>
-    //           <input
-    //             type="tel" 
-    //             name="phone"
-    //             id="phone"
-    //             placeholder="e.g., 555-1234"
-    //             value={formData.phone}
-    //             onChange={handleChange}
-    //             required
-    //             className="block w-full px-4 py-3 text-gray-900 placeholder-gray-500 border-2 border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition duration-150 bg-white"
-    //           />
-    //         </div>
-
-    //         <div>
-    //           <label htmlFor="source" className="block text-sm font-medium text-gray-700 mb-2">
-    //             Source
-    //           </label>
-    //           <select
-    //             name="source"
-    //             id="source"
-    //             value={formData.source}
-    //             onChange={handleChange}
-    //             className="block w-full px-4 py-3 text-gray-900 border-2 border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white transition duration-150"
-    //           >
-    //             <option value="guest">Guest</option>
-    //             <option value="registered">Registered</option>
-    //             <option value="referral">Referral</option>
-    //           </select>
-    //         </div>
-
-    //         <button
-    //           type="submit"
-    //           className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-lg font-bold text-white bg-amber-500 hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition duration-200 ease-in-out transform hover:scale-[1.01]"
-    //         >
-    //           Continue
-    //         </button>
-            
-    //       </form>
-    //     )}
-
-    //   </div>
-    // </div>
-    <div className="min-h-screen  flex items-center justify-center p-4">
-
-  <div className="w-full max-w-md bg-linear-to-r from-gray-900 via-gray-800 to-gray-900 border-t-2 border-amber-400 shadow-2xl p-4 sm:p-6 backdrop-blur-sm rounded-2xl md:rounded-3xl lg:rounded-3xl">
-
-    {/* Decorative Glow */}
-    <div className="absolute inset-x-0 -top-10 mx-auto w-40 h-40 rounded-full blur-3xl"></div>
-
-    <h2 className="text-2xl font-bold text-stone-200 mb-4 text-center drop-shadow-sm">
-      🍽️ Welcome!
-    </h2>
-
-    <p className="text-center text-stone-400 font-medium rounded-lg p-3 mb-8 shadow-inner">
-      Please Enter your details to view the menu & order.
-    </p>
-
-    {loading ? (
-      <div className="flex flex-col justify-center items-center py-12 space-y-3">
-        <Spinner />
-        {/* <p className="text-amber-600 font-semibold text-lg animate-pulse">
-          Preparing your experience...
-        </p> */}
-      </div>
-    ) : (
-      <form onSubmit={handleSubmit} className="space-y-6">
-
-        {/* FULL NAME */}
-        <div>
-          <label className="block text-sm font-semibold text-stone-400 mb-1">
-            Full Name
-          </label>
-          <input
-            type="text"
-            name="fullName"
-            placeholder="e.g., John Doe"
-            value={formData.fullName}
-            onChange={handleChange}
-            required
-            className={`block w-full px-4 py-3
-            ${formData.fullName.trim() === "" ? "bg-stone-300" : "bg-stone-100"}
-            text-stone-900 placeholder-gray-500
-            border-2 border-gray-300 rounded-lg shadow-sm
-            focus:ring-2 focus:ring-amber-500 focus:border-amber-500
-            transition duration-150`}
-
-          />
-        </div>
-
-        {/* PHONE */}
-        <div>
-          <label className="block text-sm font-semibold text-stone-400 mb-1">
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            name="phone"
-            placeholder="e.g., +251 912 345 678"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            className={`block w-full px-4 py-3
-            ${formData.fullName.trim() === "" ? "bg-stone-300" : "bg-stone-100"}
-            text-stone-900 placeholder-gray-500
-            border-2 border-gray-300 rounded-lg shadow-sm
-            focus:ring-2 focus:ring-amber-500 focus:border-amber-500
-            transition duration-150`}
-
-          />
-        </div>
-
-        {/* SOURCE */}
-        <div>
-          <label className="block text-sm font-semibold text-stone-400 mb-1">
-            How did you arrive here?
-          </label>
-          <select
-            name="source"
-            value={formData.source}
-            onChange={handleChange}
-            className={`block w-full px-4 py-3
-            ${formData.fullName.trim() === "" ? "bg-stone-300" : "bg-stone-100"}
-            text-stone-900 placeholder-gray-500
-            border-2 border-gray-300 rounded-lg shadow-sm
-            focus:ring-2 focus:ring-amber-500 focus:border-amber-500
-            transition duration-150`}
-
-          >
-            <option value="guest">Guest</option>
-            <option value="registered">Registered</option>
-            <option value="referral">Referral</option>
-          </select>
-        </div>
-
-        {/* BUTTON */}
-        <button
-          type="submit"
-          className="w-3/4 sm:w-auto bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-gray-900 font-bold py-2 px-2 rounded-full transition-all duration-200 shadow-lg shadow-amber-500/50 hover:shadow-amber-500/70 uppercase tracking-wide text-sm sm:text-base shrink-0"
-        >
-          Continue to Menu →
-        </button>
-
-      </form>
-    )}
-
-  </div>
-
-</div>
-
+        <LoginForm
+            loading={loading}
+            formData={formData}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+         />
 
   );
 }

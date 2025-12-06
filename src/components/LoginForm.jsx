@@ -8,9 +8,9 @@ export default function LoginForm({ handleSubmit, handleChange, formData, loadin
         {/* Decorative Glow */}
         <div className="absolute inset-x-0 -top-10 mx-auto w-40 h-40 rounded-full blur-3xl"></div>
 
-        <h2 className="text-2xl font-bold text-stone-200 mb-4 text-center drop-shadow-sm">
+        {loading ? <h2 className="text-2xl font-bold text-stone-200 mb-4 text-center drop-shadow-sm">
           🍽️ Welcome!
-        </h2>
+        </h2>: ""}
         {!loading ?
             <p className="text-center text-stone-400 font-medium rounded-lg p-3 mb-8 shadow-inner">
           Please Enter your details to view the menu & order.
@@ -28,7 +28,7 @@ export default function LoginForm({ handleSubmit, handleChange, formData, loadin
             {/* FULL NAME */}
             <div>
               <label className="block text-sm font-semibold text-stone-400 mb-1">
-                Full Name
+                Name
               </label>
               <input
                 type="text"

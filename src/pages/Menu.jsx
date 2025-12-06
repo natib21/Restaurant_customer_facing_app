@@ -8,7 +8,8 @@ import Main from "../features/menu/components/Main.jsx";
 
 export default function Menu() {
   const { state } = useLocation();
-  const menus = state?.data?.menus || [];
+  const menus = useMemo(() => state?.data?.menus || [], [state]);
+
   const restaurant = state?.restaurant || "Menu";
 
   const [cartItems, setCartItems] = useState(() => {
@@ -22,6 +23,8 @@ export default function Menu() {
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
 
   useEffect(() => {
     localStorage.setItem("shoppingCart", JSON.stringify(cartItems));
@@ -78,20 +81,31 @@ export default function Menu() {
     );
   }, [cartItems]);
 
+  function onSearchChange (value) {
+    setSearchValue(value);
+
+  }
+
+  const filteredMenus = useMemo(() => {
+    return menus.filter((menu) =>
+      menu.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+  }, [menus, searchValue]);
 
 
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-50 flex flex-col">
       {/* Header - Sticky */}
-      <Header restaurantName={restaurant} totalItems={totalItems} onCartOpen={() => setIsModalOpen(true)} />
+      <Header restaurantName={restaurant} totalItems={totalItems} onCartOpen={() => setIsModalOpen(true)} onSearchChange={onSearchChange} />
 
-      {/* Main Content Area - Scrollable */}
-      
-      <Main menus={menus}
-  cartItems={cartItems}
-  handleAddToCart={handleAddToCart}
-  handleUpdateQuantity={handleUpdateQuantity}
-  handleRemoveItem={handleRemoveItem}/>
+       
+       <Main menus={filteredMenus}
+          cartItems={cartItems}
+          handleAddToCart={handleAddToCart}
+          handleUpdateQuantity={handleUpdateQuantity}
+          handleRemoveItem={handleRemoveItem}
+  
+         />
 
       {/* Cart Modal */}
       {isModalOpen && (

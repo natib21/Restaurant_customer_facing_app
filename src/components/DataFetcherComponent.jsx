@@ -1,5 +1,5 @@
 // DataFetcherComponent.jsx
-import { getPublicMenuUrl } from '../url/url';
+import { getPublicMenuUrl, createCustomerUrl } from '../url/url';
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -32,20 +32,35 @@ function DataFetcherComponent() {
 
     try {
       const body = formData;
+
+      // const token = localStorage.getItem("sessionToken")
       console.log("Customer Creation Body:", body);
       
       // STEP 1: CREATE/UPDATE CUSTOMER 
-      // const createRes = await axios.post(
+      // const createRes = await axios.post({
       //   createCustomerUrl,
-      //   body,
-      //   {
       //     headers: {
       //       Authorization: `Bearer ${token}`,
       //       "Content-Type": "application/json",
       //     },
-      //   }
+        
+      //   body,
+      // }
+        
       // );
-      // console.log("Create Customer Response:", createRes.data);
+
+      const createRes = await axios.post(
+  createCustomerUrl,     // URL
+  body,                  // Body (your JSON object)
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  }
+);
+
+      console.log("Create Customer Response:", createRes.data);
 
 
       // 🚀 STEP 2: FETCH MENU 🚀

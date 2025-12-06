@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import Cart from "../features/menu/components/Cart";
 import Footer from "../features/menu/components/Footer.jsx";
 import Header from "../features/menu/components/Header";
+import Main from "../features/menu/components/Main.jsx";
 
 
 

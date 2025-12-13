@@ -1,4 +1,4 @@
-import Cart from "../features/menu/components/Cart.jsx"
+import Cart from "../features/cart/components/Cart.jsx"
 
 export default function Rcart() {
   return (

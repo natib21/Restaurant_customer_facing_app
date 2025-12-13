@@ -22,56 +22,6 @@ export default function Menu() {
     localStorage.setItem("shoppingCart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // const handleAddToCart = (menuItem) => {
-  //   const existingItemIndex = cartItems.findIndex((item) => item.id === menuItem.id);
-  //   if (existingItemIndex > -1) {
-  //     const updatedCart = cartItems.map((item, index) => {
-  //       if (index === existingItemIndex) {
-  //         return { ...item, quantity: item.quantity + 1 };
-  //       }
-  //       return item;
-  //     });
-  //     setCartItems(updatedCart);
-  //   } else {
-  //     setCartItems([...cartItems, { ...menuItem, quantity: 1 }]);
-  //   }
-  // };
-
-  // const handleUpdateQuantity = (itemId, change) => {
-  //   setCartItems((prevItems) => {
-  //     const existingItemIndex = prevItems.findIndex((item) => item.id === itemId);
-  //     if (existingItemIndex === -1) return prevItems;
-
-  //     const updatedItems = [...prevItems];
-  //     const currentItem = updatedItems[existingItemIndex];
-  //     const newQuantity = currentItem.quantity + change;
-
-  //     if (newQuantity <= 0) {
-  //       return prevItems.filter((item) => item.id !== itemId);
-  //     }
-
-  //     updatedItems[existingItemIndex] = { ...currentItem, quantity: newQuantity };
-  //     return updatedItems;
-  //   });
-  // };
-
-  // const handleRemoveItem = (itemId) => {
-  //   setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
-  // };
-
-  // const totalSum = useMemo(() => {
-  //   return cartItems.reduce(
-  //     (sum, item) => sum + item.price * item.quantity,
-  //     0
-  //   );
-  // }, [cartItems]);
-
-  // const totalItems = useMemo(() => {
-  //   return cartItems.reduce(
-  //     (sum, item) => sum + item.quantity,
-  //     0
-  //   );
-  // }, [cartItems]);
 
   function onSearchChange (value) {
     setSearchValue(value);
@@ -91,30 +41,18 @@ export default function Menu() {
       <Header restaurantName={restaurant} totalItems={totalItems} onCartOpen={() => setIsModalOpen(true)} onSearchChange={onSearchChange} />
 
        
-       <Main menus={filteredMenus}
-          // cartItems={cartItems}
-          // handleAddToCart={handleAddToCart}
-          // handleUpdateQuantity={handleUpdateQuantity}
-          // handleRemoveItem={handleRemoveItem}
-         />
+       <Main menus={filteredMenus} />
 
       {/* Cart Modal */}
       {isModalOpen && (
         <Cart
-          // cartItems={cartItems}
-          // totalSum={totalSum}
           onClose={() => setIsModalOpen(false)}
-          // onUpdateQuantity={handleUpdateQuantity}
-          // onRemoveItem={handleRemoveItem}
         />
       )}
 
       {/* Sticky Footer */}
       {totalItems > 0 && (
-        <Footer 
-        // totalSum = {totalSum} 
-        // totalItems={totalItems} 
-        setIsModalOpen={setIsModalOpen}/>
+        <Footer />
       )}
     </div>
   );

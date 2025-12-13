@@ -7,6 +7,7 @@ import {
 import Menu from "./pages/Menu";
 import CustomerLogin from "./pages/CustomerLogin";
 import { CartProvider } from './context/CartContext';
+import Rcart from './pages/Rcart';
 
 function App() {
   
@@ -17,6 +18,7 @@ function App() {
         <Routes>
          <Route path="/" element={<CustomerLogin />} />
          <Route path="/menu" element={<Menu />} />
+         <Route path='/cart' element={<Rcart/>}/>
          <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
       </Router>

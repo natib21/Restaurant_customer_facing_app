@@ -1,5 +1,11 @@
-export default function Footer({ totalSum, totalItems, setIsModalOpen }) {
+import { useContext } from "react";
+import { CartContext } from "../../../context/CartContext.jsx";
+
+export default function Footer({setIsModalOpen }) {
+    const {totalItems, totalSum} = useContext(CartContext)
   if (totalItems === 0) return null;
+
+
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-linear-to-r from-gray-900 via-gray-800 to-gray-900 border-t-2 border-amber-400 shadow-2xl p-4 sm:p-6 backdrop-blur-sm">

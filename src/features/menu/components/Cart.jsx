@@ -1,12 +1,22 @@
+import { useContext } from "react";
+import { CartContext } from "../../../context/CartContext.jsx";
 
 
 export default function Cart({
+  // cartItems,
+  // totalSum,
+  onClose,
+  // onUpdateQuantity,
+  // onRemoveItem,
+}) {
+
+  const {
   cartItems,
   totalSum,
-  onClose,
-  onUpdateQuantity,
-  onRemoveItem,
-}) {
+  handleUpdateQuantity: onUpdateQuantity,
+  handleRemoveItem: onRemoveItem,
+} = useContext(CartContext);
+
 
 
     if (cartItems.length === 0) {

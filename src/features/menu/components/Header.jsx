@@ -1,4 +1,9 @@
-export default function Header({ restaurantName, totalItems, onCartOpen, searchValue, onSearchChange }) {
+import { useContext } from "react";
+import { CartContext } from "../../../context/CartContext.jsx";
+
+export default function Header({ restaurantName,  onCartOpen, searchValue, onSearchChange }) {
+
+  const {totalItems} = useContext(CartContext)
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm p-3 sm:p-4 md:p-5 mb-4 rounded-lg">
 

@@ -1,26 +1,18 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import Cart from "../features/menu/components/Cart";
 import Footer from "../features/menu/components/Footer.jsx";
 import Header from "../features/menu/components/Header";
 import Main from "../features/menu/components/Main.jsx";
+import { CartContext } from "../context/CartContext.jsx";
 
 
 export default function Menu() {
   const { state } = useLocation();
+  const {cartItems,  totalItems} = useContext(CartContext)
   const menus = useMemo(() => state?.data?.menus || [], [state]);
 
   const restaurant = state?.restaurant || "Menu";
-
-  const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem("shoppingCart");
-    try {
-      return savedCart ? JSON.parse(savedCart) : [];
-    } catch (e) {
-      console.error("Could not parse cart from local storage", e);
-      return [];
-    }
-  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -30,56 +22,56 @@ export default function Menu() {
     localStorage.setItem("shoppingCart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const handleAddToCart = (menuItem) => {
-    const existingItemIndex = cartItems.findIndex((item) => item.id === menuItem.id);
-    if (existingItemIndex > -1) {
-      const updatedCart = cartItems.map((item, index) => {
-        if (index === existingItemIndex) {
-          return { ...item, quantity: item.quantity + 1 };
-        }
-        return item;
-      });
-      setCartItems(updatedCart);
-    } else {
-      setCartItems([...cartItems, { ...menuItem, quantity: 1 }]);
-    }
-  };
+  // const handleAddToCart = (menuItem) => {
+  //   const existingItemIndex = cartItems.findIndex((item) => item.id === menuItem.id);
+  //   if (existingItemIndex > -1) {
+  //     const updatedCart = cartItems.map((item, index) => {
+  //       if (index === existingItemIndex) {
+  //         return { ...item, quantity: item.quantity + 1 };
+  //       }
+  //       return item;
+  //     });
+  //     setCartItems(updatedCart);
+  //   } else {
+  //     setCartItems([...cartItems, { ...menuItem, quantity: 1 }]);
+  //   }
+  // };
 
-  const handleUpdateQuantity = (itemId, change) => {
-    setCartItems((prevItems) => {
-      const existingItemIndex = prevItems.findIndex((item) => item.id === itemId);
-      if (existingItemIndex === -1) return prevItems;
+  // const handleUpdateQuantity = (itemId, change) => {
+  //   setCartItems((prevItems) => {
+  //     const existingItemIndex = prevItems.findIndex((item) => item.id === itemId);
+  //     if (existingItemIndex === -1) return prevItems;
 
-      const updatedItems = [...prevItems];
-      const currentItem = updatedItems[existingItemIndex];
-      const newQuantity = currentItem.quantity + change;
+  //     const updatedItems = [...prevItems];
+  //     const currentItem = updatedItems[existingItemIndex];
+  //     const newQuantity = currentItem.quantity + change;
 
-      if (newQuantity <= 0) {
-        return prevItems.filter((item) => item.id !== itemId);
-      }
+  //     if (newQuantity <= 0) {
+  //       return prevItems.filter((item) => item.id !== itemId);
+  //     }
 
-      updatedItems[existingItemIndex] = { ...currentItem, quantity: newQuantity };
-      return updatedItems;
-    });
-  };
+  //     updatedItems[existingItemIndex] = { ...currentItem, quantity: newQuantity };
+  //     return updatedItems;
+  //   });
+  // };
 
-  const handleRemoveItem = (itemId) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
-  };
+  // const handleRemoveItem = (itemId) => {
+  //   setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+  // };
 
-  const totalSum = useMemo(() => {
-    return cartItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
-  }, [cartItems]);
+  // const totalSum = useMemo(() => {
+  //   return cartItems.reduce(
+  //     (sum, item) => sum + item.price * item.quantity,
+  //     0
+  //   );
+  // }, [cartItems]);
 
-  const totalItems = useMemo(() => {
-    return cartItems.reduce(
-      (sum, item) => sum + item.quantity,
-      0
-    );
-  }, [cartItems]);
+  // const totalItems = useMemo(() => {
+  //   return cartItems.reduce(
+  //     (sum, item) => sum + item.quantity,
+  //     0
+  //   );
+  // }, [cartItems]);
 
   function onSearchChange (value) {
     setSearchValue(value);
@@ -100,27 +92,29 @@ export default function Menu() {
 
        
        <Main menus={filteredMenus}
-          cartItems={cartItems}
-          handleAddToCart={handleAddToCart}
-          handleUpdateQuantity={handleUpdateQuantity}
-          handleRemoveItem={handleRemoveItem}
-  
+          // cartItems={cartItems}
+          // handleAddToCart={handleAddToCart}
+          // handleUpdateQuantity={handleUpdateQuantity}
+          // handleRemoveItem={handleRemoveItem}
          />
 
       {/* Cart Modal */}
       {isModalOpen && (
         <Cart
-          cartItems={cartItems}
-          totalSum={totalSum}
+          // cartItems={cartItems}
+          // totalSum={totalSum}
           onClose={() => setIsModalOpen(false)}
-          onUpdateQuantity={handleUpdateQuantity}
-          onRemoveItem={handleRemoveItem}
+          // onUpdateQuantity={handleUpdateQuantity}
+          // onRemoveItem={handleRemoveItem}
         />
       )}
 
       {/* Sticky Footer */}
       {totalItems > 0 && (
-        <Footer totalSum = {totalSum} totalItems={totalItems} setIsModalOpen={setIsModalOpen}/>
+        <Footer 
+        // totalSum = {totalSum} 
+        // totalItems={totalItems} 
+        setIsModalOpen={setIsModalOpen}/>
       )}
     </div>
   );

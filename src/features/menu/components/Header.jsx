@@ -49,7 +49,7 @@ export default function Header({ restaurantName, totalItems, onCartOpen, searchV
             lg:w-1/2
             px-3 py-2
             text-sm
-            border border-gray-300
+            border border-stone-300
             rounded-lg
             bg-stone-100
             focus:ring-2 focus:ring-amber-500 focus:border-amber-500

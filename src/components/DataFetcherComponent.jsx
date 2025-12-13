@@ -52,19 +52,19 @@ function DataFetcherComponent() {
       console.log("Create Customer Response:", createRes.data);
 
 
-      //  STEP 2: FETCH MENU 
-      const menuRes = await axios.get(
-        getPublicMenuUrl,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          }
-        }
-      );
+      // //  STEP 2: FETCH MENU 
+      // const menuRes = await axios.get(
+      //   getPublicMenuUrl,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //       "Content-Type": "application/json",
+      //     }
+      //   }
+      // );
       
-      console.log("Menu Response:", menuRes.data);
-      navigate("/menu", { state: menuRes.data });
+      // console.log("Menu Response:", menuRes.data);
+      navigate("/menu");
       
     } catch(error) {
       console.error("Error during customer creation/menu fetch:", error.response?.data || error.message);
@@ -144,4 +144,4 @@ function DataFetcherComponent() {
   );
 }
 
-export default DataFetcherComponent;
+export default DataFetcherComponent;     

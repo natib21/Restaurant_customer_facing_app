@@ -16,7 +16,6 @@ export default function LoginForm({ handleSubmit, handleChange, formData, loadin
           Please Enter your details to view the menu & order.
         </p> : ""
         }
-        
 
         {loading ? (
           <div className="flex flex-col justify-center items-center py-12 space-y-3">

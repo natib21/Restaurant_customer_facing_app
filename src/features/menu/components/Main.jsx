@@ -1,10 +1,11 @@
+import { useContext } from "react";
+import { CartContext } from "../../../context/CartContext.jsx";
+
 export default function Main({
   menus,
-  cartItems,
-  handleAddToCart,
-  handleUpdateQuantity,
-  handleRemoveItem,
 }) {
+
+  const {cartItems,handleAddToCart, handleUpdateQuantity,handleRemoveItem }= useContext(CartContext)
   return (
     <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-6 pb-32">

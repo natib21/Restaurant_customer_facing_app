@@ -1,5 +1,16 @@
-export default function Footer({ totalSum, totalItems, setIsModalOpen }) {
+import { useContext } from "react";
+import { CartContext } from "../../../context/CartContext.jsx";
+import { useNavigate } from "react-router-dom";
+
+export default function Footer() {
+    const {totalItems, totalSum} = useContext(CartContext)
+    const navigate = useNavigate()
   if (totalItems === 0) return null;
+
+  
+ function handleCartOpen () {
+    navigate("/cart")
+  }
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-linear-to-r from-gray-900 via-gray-800 to-gray-900 border-t-2 border-amber-400 shadow-2xl p-4 sm:p-6 backdrop-blur-sm">
@@ -14,7 +25,7 @@ export default function Footer({ totalSum, totalItems, setIsModalOpen }) {
         </div>
 
         <button
-          onClick={() => setIsModalOpen(true)}
+         onClick={() => handleCartOpen()}
           className="w-full sm:w-auto bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-gray-900 font-bold py-3 px-6 rounded-full transition-all duration-200 shadow-lg shadow-amber-500/50 hover:shadow-amber-500/70 uppercase tracking-wide text-sm sm:text-base shrink-0"
         >
           Review Cart

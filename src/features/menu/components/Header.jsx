@@ -1,4 +1,17 @@
-export default function Header({ restaurantName, totalItems, onCartOpen, searchValue, onSearchChange }) {
+import { useContext } from "react";
+import { CartContext } from "../../../context/CartContext.jsx";
+import { useNavigate } from "react-router-dom";
+
+export default function Header({ restaurantName,  searchValue, onSearchChange }) {
+
+  const {totalItems} = useContext(CartContext);
+  const navigate = useNavigate();
+
+  function handleCartOpen () {
+    navigate("/cart")
+  }
+
+
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm p-3 sm:p-4 md:p-5 mb-4 rounded-lg">
 
@@ -18,7 +31,7 @@ export default function Header({ restaurantName, totalItems, onCartOpen, searchV
         {/* Cart Button */}
         {totalItems > 0 && (
           <button
-            onClick={onCartOpen}
+             onClick={() => handleCartOpen()}
             className="inline-flex items-center gap-1.5 bg-amber-400 hover:bg-amber-500 text-gray-900 px-3 py-1.5 rounded-lg font-semibold text-sm transition shadow"
           >
             <svg
@@ -49,7 +62,7 @@ export default function Header({ restaurantName, totalItems, onCartOpen, searchV
             lg:w-1/2
             px-3 py-2
             text-sm
-            border border-gray-300
+            border border-stone-300
             rounded-lg
             bg-stone-100
             focus:ring-2 focus:ring-amber-500 focus:border-amber-500

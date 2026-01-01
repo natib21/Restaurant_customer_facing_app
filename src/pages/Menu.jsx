@@ -7,42 +7,28 @@ import { useFetchMenu } from "../hooks/useFetchMenu.js";
 import Spinner from "../components/Spinner.jsx";
 
 export default function Menu() {
-  
-  // ------------------------------------------------
-  // 1. ALL HOOKS ARE CALLED UNCONDITIONALLY AT THE TOP
-  // ------------------------------------------------
-
-  // Custom hook to fetch data
+  // 1. Hooks
   const { menu, restaurant, isLoading, error } = useFetchMenu();
-
-  // State hook
   const [searchValue, setSearchValue] = useState("");
-  
-  // Context hook
   const { cartItems, totalItems } = useContext(CartContext);
-  
-  // Memo hook
+
   const filteredMenus = useMemo(() => {
-    return menu.filter((menu) =>
-      menu.name.toLowerCase().includes(searchValue.toLowerCase())
+    // Safety check: ensure menu is an array before filtering
+    return (menu || []).filter((item) =>
+      item.name.toLowerCase().includes(searchValue.toLowerCase())
     );
   }, [menu, searchValue]);
 
-  // Effect hook
   useEffect(() => {
     localStorage.setItem("shoppingCart", JSON.stringify(cartItems));
   }, [cartItems]);
-  
-  
-  // Non-hook function definition (position is flexible)
+
+  // 2. Event Handlers
   function onSearchChange(value) {
     setSearchValue(value);
   }
 
-  // ------------------------------------------------
-  // 2. CONDITIONAL RENDERING (Early Returns) GO HERE
-  // ------------------------------------------------
-  
+  // 3. Conditional Rendering
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -52,24 +38,38 @@ export default function Menu() {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen">
+        <p className="text-red-500 font-bold">Error: {error}</p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="mt-4 p-2 bg-blue-500 text-white rounded"
+        >
+          Try Again
+        </button>
+      </div>
+    );
   }
 
-  // ------------------------------------------------
-  // 3. MAIN RENDER
-  // ------------------------------------------------
-
+  // 4. Main Render
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-50 flex flex-col">
-      {/* Header - Sticky */}
-      <Header restaurantName={restaurant} totalItems={totalItems} onSearchChange={onSearchChange} />
+      {/* Pass the specific name string from the restaurant object */}
+      <Header 
+        restaurantName={restaurant?.name || "Our Menu"} 
+        totalItems={totalItems} 
+        onSearchChange={onSearchChange} 
+      />
 
-      <Main menus={filteredMenus} />
-
-      {/* Sticky Footer */}
-      {totalItems > 0 && (
-        <Footer />
+      {filteredMenus.length > 0 ? (
+        <Main menus={filteredMenus} />
+      ) : (
+        <div className="flex-1 flex justify-center items-center text-gray-400">
+          No items match your search.
+        </div>
       )}
+
+      {totalItems > 0 && <Footer />}
     </div>
   );
 }

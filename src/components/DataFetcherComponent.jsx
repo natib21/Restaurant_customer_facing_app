@@ -1,147 +1,63 @@
-import { getPublicMenuUrl, createCustomerUrl } from '../url/url';
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
-import Spinner from './Spinner';
 import { useStartSession } from '../hooks/useStartSession';
-import LoginForm from './LoginForm';
+import Spinner from './Spinner';
 
-function DataFetcherComponent() {
-
+export default function DataFetcherComponent() {
   const navigate = useNavigate();
-  const [dataParam, setDataParam] = useState(null);
-  const [sParam, setSParam] = useState(null);
-  const [sessionToken, setSessionToken] = useState(localStorage.getItem("sessionToken")); 
-  const [loading, setLoading] = useState(false);
+  const { startSession } = useStartSession();
+  const [error, setError] = useState(null);
+  const hasRun = useRef(false);
 
-  const [formData, setFormData] = useState({
-    fullName: "",
-    phone: "",
-    source: "guest",
-  });
-
-  // 1. customerLogin is updated to include the customer creation step
-  const customerLogin = useCallback(async (tokenOverride) => {
-    const token = tokenOverride || localStorage.getItem("sessionToken");
-
-    if (!token) {
-        console.error("No session token found for customer login.");
-        setLoading(false);
-        return;
-    }
-
-    try {
-      const body = formData;
-
-     
-      console.log("Customer Creation Body:", body);
-      
-
-
-       const createRes = await axios.post(
-        createCustomerUrl,    
-        body,                  
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log("Create Customer Response:", createRes.data);
-
-
-      // //  STEP 2: FETCH MENU 
-      // const menuRes = await axios.get(
-      //   getPublicMenuUrl,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //       "Content-Type": "application/json",
-      //     }
-      //   }
-      // );
-      
-      // console.log("Menu Response:", menuRes.data);
-      navigate("/menu");
-      
-    } catch(error) {
-      console.error("Error during customer creation/menu fetch:", error.response?.data || error.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [navigate, formData]); // **Dependencies updated to include formData and createCustomerUrl**
-
-  // Use the custom hook for startSession
-  const startSession = useStartSession(dataParam, sParam, customerLogin, setLoading, setSessionToken);
-
-  // --- Effect 1: Process Query Params ---
   useEffect(() => {
-    const processQueryParams = () => {
-      const queryString = window.location.search;
-      const params = new URLSearchParams(queryString);
-      
-      const rawData = params.get('data');
-      const rawSignature = params.get('s');
+    const initializeApp = async () => {
+      // 1. Extract params from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const data = urlParams.get('data');
+      const s = urlParams.get('s');
 
-      if (rawData && rawSignature) {
-        setDataParam(rawData);
-        setSParam(rawSignature);
+      if (!data || !s) {
+        setError("Invalid Link: Please scan the QR code again.");
+        return;
+      }
+
+      // Prevent double execution in React Strict Mode
+      if (hasRun.current) return;
+      hasRun.current = true;
+
+      try {
+        // 2. Get the session token
+        const token = await startSession(data, s);
+
+        if (token) {
+          // 3. Go straight to menu (we skip createCustomer for now)
+          navigate("/menu");
+        } else {
+          throw new Error("Session initialization failed.");
+        }
+      } catch (err) {
+        console.error("Initialization Error:", err);
+        setError("Connection error. Please try again.");
       }
     };
-    
-    processQueryParams();
-  }, []);
 
-  
-  // --- Effect 2: Automatically Start Session if Params Exist ---
-  useEffect(() => {
-    
-    const runAutoSession = async () => {
-        // If data/s params exist and we don't have a token, start session and login
-        if (dataParam && sParam && !sessionToken) {
-            await startSession(true);
-        }
-    };
+    initializeApp();
+  }, [navigate, startSession]);
 
-    runAutoSession();
-    
-  }, [dataParam, sParam, sessionToken, startSession]); 
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        <div className="p-6 border border-red-500 rounded-lg bg-gray-800">
+          <p className="text-red-400">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
-  
-  // --- Form Handlers ---
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    if (dataParam && sParam) {
-        // Start session, which automatically calls customerLogin after
-        await startSession(true);
-    } else {
-        // If no URL params, try to use existing token to log in/create customer
-        await customerLogin();
-    }
-  };
-
-  
   return (
-        <LoginForm
-            loading={loading}
-            formData={formData}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-         />
-
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900">
+      <Spinner />
+      <p className="mt-4 text-amber-400 animate-pulse">Loading Menu...</p>
+    </div>
   );
 }
-
-export default DataFetcherComponent;     

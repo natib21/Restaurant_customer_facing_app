@@ -5,31 +5,29 @@ export default function LoginForm({ handleSubmit, handleChange, formData, loadin
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="relative w-full max-w-md bg-linear-to-r from-gray-900 via-gray-800 to-gray-900 border-t-2 border-amber-400 shadow-2xl p-4 sm:p-6 backdrop-blur-sm rounded-2xl md:rounded-3xl lg:rounded-3xl">
 
-        {/* Decorative Glow */}
-        <div className="absolute inset-x-0 -top-10 mx-auto w-40 h-40 rounded-full blur-3xl"></div>
+        {/* 1. Improved Header Logic */}
+        <h2 className="text-2xl font-bold text-stone-200 mb-4 text-center drop-shadow-sm">
+          {loading ? "Preparing your table..." : "🍽️ Welcome!"}
+        </h2>
 
-        {loading ? <h2 className="text-2xl font-bold text-stone-200 mb-4 text-center drop-shadow-sm">
-          🍽️ Welcome!
-        </h2>: ""}
-        {!loading ?
-            <p className="text-center text-stone-400 font-medium rounded-lg p-3 mb-8 shadow-inner">
-          Please Enter your details to view the menu & order.
-        </p> : ""
-        }
-        
+        {!loading && (
+          <p className="text-center text-stone-400 font-medium rounded-lg p-3 mb-8 shadow-inner">
+            Please Enter your details to view the menu & order.
+          </p>
+        )}
 
+        {/* 2. Content Switch */}
         {loading ? (
-          <div className="flex flex-col justify-center items-center py-12 space-y-3">
+          <div className="flex flex-col justify-center items-center py-12 space-y-4">
             <Spinner />
+            <p className="text-amber-400 animate-pulse text-sm">Logging you in...</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
 
             {/* FULL NAME */}
             <div>
-              <label className="block text-sm font-semibold text-stone-400 mb-1">
-                Name
-              </label>
+              <label className="block text-sm font-semibold text-stone-400 mb-1">Name</label>
               <input
                 type="text"
                 name="fullName"
@@ -37,20 +35,14 @@ export default function LoginForm({ handleSubmit, handleChange, formData, loadin
                 value={formData.fullName}
                 onChange={handleChange}
                 required
-                className={`block w-full px-4 py-3
-                  ${formData.fullName.trim() === "" ? "bg-stone-300" : "bg-stone-100"}
-                  text-stone-900 placeholder-gray-500
-                  border-2 border-gray-300 rounded-lg shadow-sm
-                  focus:ring-2 focus:ring-amber-500 focus:border-amber-500
-                  transition duration-150`}
+                className={`block w-full px-4 py-3 text-stone-900 placeholder-gray-500 border-2 border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 transition duration-150
+                  ${formData.fullName.trim() === "" ? "bg-stone-300" : "bg-stone-100"}`}
               />
             </div>
 
             {/* PHONE */}
             <div>
-              <label className="block text-sm font-semibold text-stone-400 mb-1">
-                Phone Number
-              </label>
+              <label className="block text-sm font-semibold text-stone-400 mb-1">Phone Number</label>
               <input
                 type="tel"
                 name="phone"
@@ -58,31 +50,22 @@ export default function LoginForm({ handleSubmit, handleChange, formData, loadin
                 value={formData.phone}
                 onChange={handleChange}
                 required
-                className={`block w-full px-4 py-3
-                  ${formData.fullName.trim() === "" ? "bg-stone-300" : "bg-stone-100"}
-                  text-stone-900 placeholder-gray-500
-                  border-2 border-gray-300 rounded-lg shadow-sm
-                  focus:ring-2 focus:ring-amber-500 focus:border-amber-500
-                  transition duration-150`}
+                /* Fixed the color logic check below to use formData.phone */
+                className={`block w-full px-4 py-3 text-stone-900 placeholder-gray-500 border-2 border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 transition duration-150
+                  ${formData.phone.trim() === "" ? "bg-stone-300" : "bg-stone-100"}`}
               />
             </div>
 
-            {/* HIDDEN SOURCE */}
-            <input
-              type="hidden"
-              name="source"
-              value={formData.source || "guest"}
-              onChange={handleChange}
-            />
+            <input type="hidden" name="source" value={formData.source || "guest"} />
 
-            {/* BUTTON */}
-            <button
-              type="submit"
-              className="ml-1.5 w-3/4 sm:w-auto bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-gray-900 font-bold py-2 px-2 rounded-full transition-all duration-200 shadow-lg shadow-amber-500/50 hover:shadow-amber-500/70 uppercase tracking-wide text-sm sm:text-base shrink-0"
-            >
-              Continue to Menu →
-            </button>
-
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="w-full sm:w-3/4 bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-gray-900 font-bold py-3 px-4 rounded-full transition-all duration-200 shadow-lg shadow-amber-500/30 uppercase tracking-wide text-sm"
+              >
+                Continue to Menu →
+              </button>
+            </div>
           </form>
         )}
       </div>

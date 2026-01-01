@@ -1,42 +1,33 @@
-// hooks/useStartSession.js
 import { useCallback } from 'react';
 import axios from 'axios';
 import { sessionUrl } from '../url/url';
 
-export const useStartSession = (dataParam, sParam, customerLogin, setLoading, setSessionToken) => {
-  return useCallback(async (startLogin = false) => {
+export const useStartSession = () => {
+  const startSession = useCallback(async (dataParam, sParam) => {
     if (!dataParam || !sParam) {
-      console.error("Missing data or signature parameters to start session.");
-      return;
+      console.error("Missing data or signature parameters.");
+      return null;
     }
-
-    setLoading(true);
 
     try {
       const res = await axios.post(
         `${sessionUrl}data=${dataParam}&s=${sParam}`,
         {},
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
 
       if (res.data.status === "success") {
         const token = res.data.data.sessionToken;
-        setSessionToken(token);
+        // Save for future page refreshes
         localStorage.setItem("sessionToken", token);
-        
-        if (startLogin) {
-          await customerLogin(token);
-        } else {
-          setLoading(false);
-        }
-      } else {
-        setLoading(false);
+        return token; // Return it so the component can use it immediately
       }
+      return null;
     } catch (err) {
-      setLoading(false);
-      console.error("Error starting session:", err.response?.data || err.message);
+      console.error("Error starting session:", err.message);
+      throw err;
     }
-  }, [dataParam, sParam, customerLogin, setLoading, setSessionToken]);
+  }, []);
+
+  return { startSession };
 };

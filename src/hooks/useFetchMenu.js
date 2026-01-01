@@ -30,6 +30,7 @@ export function useFetchMenu() {
 
         // Use optional chaining to prevent crashes if data structure is missing
         setMenu(res.data?.data?.menus || []);
+        console.log("restaurant",res.data.restaurant)
         setRestaurant(res.data?.restaurant || null);
       } catch (err) {
         console.error("Error fetching menu:", err);

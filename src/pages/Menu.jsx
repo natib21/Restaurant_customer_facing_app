@@ -7,13 +7,19 @@ import { useFetchMenu } from "../hooks/useFetchMenu.js";
 import Spinner from "../components/Spinner.jsx";
 
 export default function Menu() {
-  // 1. Hooks
   const { menu, restaurant, isLoading, error } = useFetchMenu();
   const [searchValue, setSearchValue] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
   const { cartItems, totalItems } = useContext(CartContext);
 
+  // Extract unique categories for the sidebar
+  const categories = useMemo(() => {
+    if (!menu) return [];
+    const cats = menu.map((item) => item.category_name || "General");
+    return ["All", ...new Set(cats)];
+  }, [menu]);
+
   const filteredMenus = useMemo(() => {
-    // Safety check: ensure menu is an array before filtering
     return (menu || []).filter((item) =>
       item.name.toLowerCase().includes(searchValue.toLowerCase())
     );
@@ -23,15 +29,9 @@ export default function Menu() {
     localStorage.setItem("shoppingCart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // 2. Event Handlers
-  function onSearchChange(value) {
-    setSearchValue(value);
-  }
-
-  // 3. Conditional Rendering
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen bg-gray-50">
         <Spinner />
       </div>
     );
@@ -39,11 +39,11 @@ export default function Menu() {
 
   if (error) {
     return (
-      <div className="flex flex-col justify-center items-center min-h-screen">
-        <p className="text-red-500 font-bold">Error: {error}</p>
+      <div className="flex flex-col justify-center items-center min-h-screen p-4 text-center">
+        <p className="text-red-500 font-bold mb-4">Error: {error}</p>
         <button 
           onClick={() => window.location.reload()} 
-          className="mt-4 p-2 bg-blue-500 text-white rounded"
+          className="px-6 py-2 bg-amber-500 text-white rounded-full font-bold shadow-lg"
         >
           Try Again
         </button>
@@ -51,23 +51,65 @@ export default function Menu() {
     );
   }
 
-  // 4. Main Render
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-50 flex flex-col">
-      {/* Pass the specific name string from the restaurant object */}
+    <div className="min-h-screen bg-gray-50 flex flex-col relative overflow-x-hidden">
+      
+      {/* SIDEBAR OVERLAY */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-300"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* SIDEBAR DRAWER */}
+      <aside className={`
+        fixed top-0 left-0 h-full w-72 bg-white z-50 shadow-2xl transform transition-transform duration-300 ease-in-out
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+      `}>
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-8 border-b pb-4">
+            <h3 className="text-xl font-bold text-gray-800">Menu categories</h3>
+            <button 
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-2 hover:bg-gray-100 rounded-full text-gray-500"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+          </div>
+          
+          <nav className="space-y-2">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setIsSidebarOpen(false)}
+                className="w-full text-left px-4 py-3 rounded-xl text-gray-700 font-medium hover:bg-amber-50 hover:text-amber-600 transition-colors"
+              >
+                {category}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </aside>
+
+      {/* HEADER */}
       <Header 
-        restaurantName={restaurant?.name || "Our Menu"} 
-        totalItems={totalItems} 
-        onSearchChange={onSearchChange} 
+        restaurantName={restaurant || "Our Menu"} 
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        onToggleSidebar={() => setIsSidebarOpen(true)} // Pass toggle function
       />
 
-      {filteredMenus.length > 0 ? (
-        <Main menus={filteredMenus} />
-      ) : (
-        <div className="flex-1 flex justify-center items-center text-gray-400">
-          No items match your search.
-        </div>
-      )}
+      {/* MAIN CONTENT */}
+      <main className="flex-1 p-2 sm:p-4">
+        {filteredMenus.length > 0 ? (
+          <Main menus={filteredMenus} />
+        ) : (
+          <div className="flex-1 flex flex-col justify-center items-center text-gray-400 py-20">
+            <p className="text-lg font-medium">No items match your search.</p>
+          </div>
+        )}
+      </main>
 
       {totalItems > 0 && <Footer />}
     </div>

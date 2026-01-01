@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 
 import Menu from "./pages/Menu";
-import CustomerLogin from "./pages/CustomerLogin";
+import Landing from "./pages/Landing";
 import { CartProvider } from './context/CartContext';
 import Rcart from './pages/Rcart';
 
@@ -16,7 +16,7 @@ function App() {
    <CartProvider>
       <Router>
         <Routes>
-         <Route path="/" element={<CustomerLogin />} />
+         <Route path="/" element={<Landing />} />
          <Route path="/menu" element={<Menu />} />
          <Route path='/cart' element={<Rcart/>}/>
          <Route path="*" element={<div>404 Not Found</div>} />

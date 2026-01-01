@@ -1,19 +1,68 @@
 import { useContext } from "react";
-import { CartContext } from "../../../context/CartContext.jsx";
+import { CartContext } from "../context/CartContext.jsx";
+import { FilteredMenuContext } from "../context/FilteredMenuContext"; // Adjust path as needed
 import { useNavigate } from "react-router-dom";
-import { useFetchMenu } from "../../../hooks/useFetchMenu.js";
+import { useFetchMenu } from "../hooks/useFetchMenu.js";
+import { useState, useMemo } from "react";
 
-export default function Header({  searchValue, onSearchChange, onToggleSidebar }) {
+export default function HeaderAll() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
+  const { searchValue, setSearchValue } = useContext(FilteredMenuContext); // Consume search from context
   const { totalItems } = useContext(CartContext);
   const navigate = useNavigate();
-    const { restaurant } = useFetchMenu();
+  const { restaurant, menu } = useFetchMenu();
+  
 
   function handleCartOpen() {
     navigate("/cart");
   }
 
+  // Extract unique categories for the sidebar
+  const categories = useMemo(() => {
+    if (!menu) return [];
+    const cats = menu.map((item) => item.category_name || "General");
+    return ["All", ...new Set(cats)];
+  }, [menu]);
+
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm p-3 sm:p-4 md:px-6 mb-2">
+      {/* SIDEBAR OVERLAY */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/40 z-40 transition-opacity duration-300"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+      
+      {/* SIDEBAR DRAWER */}
+      <aside className={`
+        fixed top-0 left-0 h-full w-72 bg-white z-50 shadow-2xl transform transition-transform duration-300 ease-in-out
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+      `}>
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-8 border-b pb-4">
+            <h3 className="text-xl font-bold text-gray-800">Menu categories</h3>
+            <button 
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-2 hover:bg-gray-100 rounded-full text-gray-500"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+          </div>
+          
+          <nav className="space-y-2">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setIsSidebarOpen(false)}
+                className="w-full text-left px-4 py-3 rounded-xl text-gray-700 font-medium hover:bg-amber-50 hover:text-amber-600 transition-colors"
+              >
+                {category}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </aside>
       
       {/* FIRST ROW — Menu Icon + Name + Cart */}
       <div className="flex items-center justify-between gap-3">
@@ -21,7 +70,7 @@ export default function Header({  searchValue, onSearchChange, onToggleSidebar }
         <div className="flex items-center gap-3 min-w-0">
           {/* SIDEBAR TOGGLE BUTTON */}
           <button 
-            onClick={onToggleSidebar}
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="p-2 -ml-2 hover:bg-gray-100 rounded-lg transition"
           >
             <svg 
@@ -68,9 +117,9 @@ export default function Header({  searchValue, onSearchChange, onToggleSidebar }
           <input
             type="text"
             value={searchValue}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={(e) => setSearchValue(e.target.value)}
             placeholder="Search items..."
-            className="w-full pl-10 pr-4 py-2 text-sm text-amber-400 border  border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-hidden transition"
+            className="w-full pl-10 pr-4 py-2 text-sm text-amber-400 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-hidden transition"
           />
         </div>
       </div>

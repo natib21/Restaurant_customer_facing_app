@@ -8,31 +8,25 @@ import Menu from "./pages/Menu";
 import Landing from "./pages/Landing";
 import { CartProvider } from './context/CartContext';
 import Rcart from './pages/Rcart';
+import HeaderAll from './components/HeaderAll';
+import { FilteredMenuProvider } from './context/FilteredMenuContext';
 
 function App() {
-  
-
   return (
-   <CartProvider>
+    <CartProvider>
       <Router>
-        <Routes>
-         <Route path="/" element={<Landing />} />
-         <Route path="/menu" element={<Menu />} />
-         <Route path='/cart' element={<Rcart/>}/>
-         <Route path="*" element={<div>404 Not Found</div>} />
-        </Routes>
+        <FilteredMenuProvider>
+          <HeaderAll />
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path='/cart' element={<Rcart/>}/>
+            <Route path="*" element={<div>404 Not Found</div>} />
+          </Routes>
+        </FilteredMenuProvider>
       </Router>
     </CartProvider> 
-
-  )
+  );
 }
 
-export default App
-
-
-
-
-
-
-
-
+export default App;

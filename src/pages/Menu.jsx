@@ -1,29 +1,21 @@
-import { useState, useMemo, useEffect, useContext } from "react";
+import {  useEffect, useContext } from "react";
 import Footer from "../features/menu/components/Footer.jsx";
 import Header from "../features/menu/components/Header";
 import Main from "../features/menu/components/Main.jsx";
 import { CartContext } from "../context/CartContext.jsx";
 import { useFetchMenu } from "../hooks/useFetchMenu.js";
 import Spinner from "../components/Spinner.jsx";
+import { FilteredMenuContext } from "../context/FilteredMenuContext.jsx";
 
 export default function Menu() {
-  const { menu, restaurant, isLoading, error } = useFetchMenu();
-  const [searchValue, setSearchValue] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
+  const {  isLoading, error } = useFetchMenu();
+  const { filteredMenus } = useContext(FilteredMenuContext);
+
+  
   const { cartItems, totalItems } = useContext(CartContext);
 
-  // Extract unique categories for the sidebar
-  const categories = useMemo(() => {
-    if (!menu) return [];
-    const cats = menu.map((item) => item.category_name || "General");
-    return ["All", ...new Set(cats)];
-  }, [menu]);
 
-  const filteredMenus = useMemo(() => {
-    return (menu || []).filter((item) =>
-      item.name.toLowerCase().includes(searchValue.toLowerCase())
-    );
-  }, [menu, searchValue]);
+ 
 
   useEffect(() => {
     localStorage.setItem("shoppingCart", JSON.stringify(cartItems));
@@ -54,51 +46,11 @@ export default function Menu() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col relative overflow-x-hidden">
       
-      {/* SIDEBAR OVERLAY */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-300"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
+  
 
-      {/* SIDEBAR DRAWER */}
-      <aside className={`
-        fixed top-0 left-0 h-full w-72 bg-white z-50 shadow-2xl transform transition-transform duration-300 ease-in-out
-        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-      `}>
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-8 border-b pb-4">
-            <h3 className="text-xl font-bold text-gray-800">Menu categories</h3>
-            <button 
-              onClick={() => setIsSidebarOpen(false)}
-              className="p-2 hover:bg-gray-100 rounded-full text-gray-500"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
-          </div>
-          
-          <nav className="space-y-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setIsSidebarOpen(false)}
-                className="w-full text-left px-4 py-3 rounded-xl text-gray-700 font-medium hover:bg-amber-50 hover:text-amber-600 transition-colors"
-              >
-                {category}
-              </button>
-            ))}
-          </nav>
-        </div>
-      </aside>
+     
 
-      {/* HEADER */}
-      <Header 
-        restaurantName={restaurant || "Our Menu"} 
-        searchValue={searchValue}
-        onSearchChange={setSearchValue}
-        onToggleSidebar={() => setIsSidebarOpen(true)} // Pass toggle function
-      />
+     
 
       {/* MAIN CONTENT */}
       <main className="flex-1 p-2 sm:p-4">

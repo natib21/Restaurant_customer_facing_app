@@ -1,6 +1,6 @@
 import DataFetcherComponent from "../components/DataFetcherComponent";
 
-export default function CustomerLogin() {
+export default function Landing() {
   return (
     <div>
 

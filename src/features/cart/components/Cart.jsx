@@ -55,7 +55,7 @@ export default function Cart() {
                 {cartItems.map((item) => (
                   <div key={item.id} className="py-4 first:pt-0 last:pb-0">
                     <div className="flex gap-3">
-                      <img src={item.image} alt={item.name} className="w-14 h-14 md:w-20 md:h-20 object-cover rounded-lg" />
+                     
                       <div className="grow">
                         <div className="flex justify-between">
                           <p className="font-semibold text-gray-800 leading-tight">{item.name}</p>

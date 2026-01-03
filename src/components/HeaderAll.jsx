@@ -26,7 +26,7 @@ export default function HeaderAll() {
   }, [menu]);
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm p-3 sm:p-4 md:px-6 mb-2">
+    <header className="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm p-3 sm:p-4 md:px-6">
       {/* SIDEBAR OVERLAY */}
       {isSidebarOpen && (
         <div 
@@ -128,7 +128,7 @@ export default function HeaderAll() {
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder="Search items..."
-            className="w-full pl-10 pr-4 py-2 text-sm text-amber-400 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-hidden transition"
+            className="w-full pl-10 pr-4 py-2 text-sm text-amber-400 border border-gray-200 rounded-xl bg-gray-50 focus:ring-1 focus:ring-amber-400 focus:border-amber-400 outline-hidden transition"
           />
         </div>
           }

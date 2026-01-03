@@ -1,8 +1,8 @@
 import {  useEffect, useContext } from "react";
 import Footer from "../features/menu/components/Footer.jsx";
-import Header from "../features/menu/components/Header";
 import Main from "../features/menu/components/Main.jsx";
 import { CartContext } from "../context/CartContext.jsx";
+
 import Spinner from "../components/Spinner.jsx";
 import { FilteredMenuContext } from "../context/FilteredMenuContext.jsx";
 

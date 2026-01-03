@@ -52,17 +52,17 @@ export default function Cart() {
     <div className="min-h-screen bg-gray-50 pb-8"> 
       <div className="container mx-auto px-4 py-8">
         
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-8 text-center md:text-left">
+        <h1 className="text-xl sm:text-4xl font-extrabold text-gray-900 mb-8 text-center md:text-left">
           Your Selection
         </h1>
 
         <div className="flex flex-col md:flex-row md:items-start gap-8">
           
           {/* LEFT COLUMN: List of Items */}
-          <div className="flex-grow space-y-4">
+          <div className="grow space-y-4">
             <div className="bg-white rounded-xl shadow-xl p-4 sm:p-6 lg:p-8">
               <div className="flex justify-between items-center border-b border-amber-200 pb-3 mb-6">
-                <h2 className="text-xl font-bold text-gray-800">Items Summary</h2>
+                <h2 className="text-xl font-medium sm:font-bold text-gray-800">Items Summary</h2>
                 <span className="text-sm text-gray-500">{cartItems.length} Items</span>
               </div>
 
@@ -71,8 +71,8 @@ export default function Cart() {
                   <div key={item.id} className="flex flex-col border-b border-amber-100 last:border-b-0 pb-4">
                     <div className="flex items-start space-x-3 w-full mb-3">
                       <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg" />
-                      <div className="flex-grow">
-                        <p className="font-semibold text-lg text-gray-800">{item.name}</p>
+                      <div className="grow">
+                        <p className="font-medium sm:font-semibold text-lg text-gray-800">{item.name}</p>
                         <p className="text-sm text-gray-500">ETB {item.price.toFixed(2)}</p>
                       </div>
                     </div>
@@ -83,7 +83,7 @@ export default function Cart() {
                         <span className="px-2 font-medium text-gray-800 w-8 text-center">{item.quantity}</span>
                         <button onClick={() => onUpdateQuantity(item.id, 1)} className="px-3 py-1 text-xl text-amber-700 hover:bg-amber-50 rounded-r-lg">+</button>
                       </div>
-                      <p className="font-bold text-lg text-amber-600">ETB {(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="font-medium sm:font-bold text-lg text-amber-600">ETB {(item.price * item.quantity).toFixed(2)}</p>
                       <button onClick={() => onRemoveItem(item.id)} className="text-gray-400 hover:text-red-600 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

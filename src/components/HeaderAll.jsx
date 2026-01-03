@@ -7,7 +7,8 @@ import { useState, useMemo } from "react";
 
 export default function HeaderAll() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
- const { searchValue, setSearchValue, menu, restaurant } = useContext(FilteredMenuContext); 
+ const { searchValue, setSearchValue, menu, restaurant, error } = useContext(FilteredMenuContext); 
+ console.log("restaurant", restaurant)
   const { totalItems } = useContext(CartContext);
   const navigate = useNavigate();
 
@@ -69,7 +70,9 @@ export default function HeaderAll() {
         
         <div className="flex items-center gap-3 min-w-0">
           {/* SIDEBAR TOGGLE BUTTON */}
-          <button 
+
+          { !error &&
+            <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="p-2 -ml-2 hover:bg-gray-100 rounded-lg transition"
           >
@@ -82,6 +85,8 @@ export default function HeaderAll() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
           </button>
+          }
+          
 
           {/* Restaurant Name */}
           <div className="min-w-0">
@@ -95,6 +100,7 @@ export default function HeaderAll() {
         </div>
 
         {/* Cart Button */}
+        {!error &&
         <button
           onClick={handleCartOpen}
           className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold text-sm transition shadow-sm
@@ -105,15 +111,18 @@ export default function HeaderAll() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
           <span className="font-bold text-xs">{totalItems}</span>
-        </button>
+        </button>} 
       </div>
+    
 
       {/* SECOND ROW — Search Bar */}
       <div className="mt-3 flex justify-center">
-        <div className="relative w-full sm:max-w-md">
+         {!error && <div className="relative w-full sm:max-w-md">
+         
            <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
            </svg>
+           
           <input
             type="text"
             value={searchValue}
@@ -122,6 +131,7 @@ export default function HeaderAll() {
             className="w-full pl-10 pr-4 py-2 text-sm text-amber-400 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-hidden transition"
           />
         </div>
+          }
       </div>
 
     </header>

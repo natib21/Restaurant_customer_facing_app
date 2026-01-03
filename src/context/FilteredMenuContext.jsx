@@ -5,7 +5,7 @@ const FilteredMenuContext = createContext()
 
 function FilteredMenuProvider({children}) {
     const [searchValue, setSearchValue] = useState("");
-   const {menu} = useFetchMenu();
+   const {menu,isLoading,error, restaurant} = useFetchMenu();
 
       const filteredMenus = useMemo(() => {
     return (menu || []).filter((item) =>
@@ -13,7 +13,7 @@ function FilteredMenuProvider({children}) {
     );
   }, [menu, searchValue]);
     
-   return <FilteredMenuContext.Provider  value={{filteredMenus, menu, searchValue, setSearchValue}}> {/* Added searchValue here */}
+   return <FilteredMenuContext.Provider  value={{ filteredMenus, menu, searchValue, setSearchValue, isLoading, error, restaurant }}> 
     {children}
    </FilteredMenuContext.Provider>
 }

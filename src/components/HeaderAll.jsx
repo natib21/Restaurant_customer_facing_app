@@ -2,15 +2,15 @@ import { useContext } from "react";
 import { CartContext } from "../context/CartContext.jsx";
 import { FilteredMenuContext } from "../context/FilteredMenuContext"; // Adjust path as needed
 import { useNavigate } from "react-router-dom";
-import { useFetchMenu } from "../hooks/useFetchMenu.js";
+
 import { useState, useMemo } from "react";
 
 export default function HeaderAll() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
-  const { searchValue, setSearchValue } = useContext(FilteredMenuContext); // Consume search from context
+ const { searchValue, setSearchValue, menu, restaurant } = useContext(FilteredMenuContext); 
   const { totalItems } = useContext(CartContext);
   const navigate = useNavigate();
-  const { restaurant, menu } = useFetchMenu();
+
   
 
   function handleCartOpen() {

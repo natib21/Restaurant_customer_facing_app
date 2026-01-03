@@ -3,17 +3,12 @@ import Footer from "../features/menu/components/Footer.jsx";
 import Header from "../features/menu/components/Header";
 import Main from "../features/menu/components/Main.jsx";
 import { CartContext } from "../context/CartContext.jsx";
-import { useFetchMenu } from "../hooks/useFetchMenu.js";
 import Spinner from "../components/Spinner.jsx";
 import { FilteredMenuContext } from "../context/FilteredMenuContext.jsx";
 
 export default function Menu() {
-  const {  isLoading, error } = useFetchMenu();
-  const { filteredMenus } = useContext(FilteredMenuContext);
-
-  
-  const { cartItems, totalItems } = useContext(CartContext);
-
+ const { filteredMenus, isLoading, error } = useContext(FilteredMenuContext);
+const { cartItems, totalItems } = useContext(CartContext);
 
  
 

@@ -1,7 +1,7 @@
 
 import { useContext, useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-// Ensure these contexts are correctly exported from your context files
+import { useLocation } from "react-router-dom";
 import { CartContext } from "../context/CartContext"
 import { FilteredMenuContext } from "../context/FilteredMenuContext"
 
@@ -11,6 +11,11 @@ import { FilteredMenuContext } from "../context/FilteredMenuContext"
  */
 export default function HeaderAll({ onNavigate }) {
   const navigate = useNavigate()
+   const location = useLocation();
+
+  const hideSearch = location.pathname === "/cart";
+
+  
   
   // State for Sidebar
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -149,7 +154,7 @@ export default function HeaderAll({ onNavigate }) {
           </div>
         </div>
 
-        {!error && (
+        {!error && !hideSearch && (
           <button
             onClick={() => navigateTo("/cart")}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold text-sm transition shadow-sm ${
@@ -170,7 +175,7 @@ export default function HeaderAll({ onNavigate }) {
       </div>
 
       {/* SEARCH BAR */}
-      <div className="mt-3 flex justify-center">
+      {!hideSearch && <div className="mt-3 flex justify-center">
         {!error && (
           <div className="relative w-full sm:max-w-md">
             <svg
@@ -191,11 +196,11 @@ export default function HeaderAll({ onNavigate }) {
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="Search items..."
-              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-200 rounded-xl bg-gray-50 focus:ring-1 focus:ring-amber-400 outline-none transition"
+              className="w-full pl-10 pr-4 py-2 text-sm text-stone-700 border border-gray-200 rounded-xl bg-gray-50 focus:ring-1 focus:ring-amber-400 outline-none transition"
             />
           </div>
         )}
-      </div>
+      </div>}
     </header>
   )
 }

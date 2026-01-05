@@ -117,7 +117,7 @@ export default function Cart() {
           <span className="text-xl font-bold text-gray-900">ETB {totalSum.toFixed(2)}</span>
         </div>
         <button
-          onClick={() => alert("Proceeding to Order...")}
+          onClick={() => goToOrder()}
           className="w-full bg-amber-500 text-white font-bold py-4 rounded-2xl shadow-lg active:bg-amber-600"
         >
           PROCEED TO ORDER

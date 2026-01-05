@@ -3,30 +3,43 @@ import { CartContext } from "../../../context/CartContext.jsx";
 import { useNavigate } from "react-router-dom";
 
 export default function Footer() {
-    const {totalItems, totalSum} = useContext(CartContext)
-    const navigate = useNavigate()
+  const { totalItems, totalSum } = useContext(CartContext);
+  const navigate = useNavigate();
+
   if (totalItems === 0) return null;
 
-  
- function handleCartOpen () {
-    navigate("/cart")
+  function handleCartOpen() {
+    navigate("/cart");
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-linear-to-r from-gray-900 via-gray-800 to-gray-900 border-t-2 border-amber-400 shadow-2xl p-4 sm:p-6 backdrop-blur-sm">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6 max-w-7xl mx-auto">
-        <div className="flex flex-col">
-          <span className="text-xs sm:text-sm font-medium text-amber-300 uppercase tracking-wider">
+    <div className="fixed bottom-0 left-0 right-0 
+      bg-linear-to-r from-gray-900 via-gray-800 to-gray-900 
+      border-t-2 border-amber-400 shadow-2xl 
+      p-3 sm:p-6 backdrop-blur-sm"
+    >
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between 
+        gap-2 sm:gap-6 max-w-7xl mx-auto"
+      >
+        <div className="flex flex-col leading-tight">
+          <span className="text-[10px] sm:text-sm font-medium text-amber-300 uppercase tracking-wider">
             Total cart ({totalItems})
           </span>
-          <span className="text-2xl sm:text-3xl font-extrabold text-white">
+          <span className="text-xl sm:text-3xl font-extrabold text-white">
             ETB {totalSum.toFixed(2)}
           </span>
         </div>
 
         <button
-         onClick={() => handleCartOpen()}
-          className="w-full sm:w-auto bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-gray-900 font-bold py-3 px-6 rounded-full transition-all duration-200 shadow-lg shadow-amber-500/50 hover:shadow-amber-500/70 uppercase tracking-wide text-sm sm:text-base shrink-0"
+          onClick={handleCartOpen}
+          className="w-full sm:w-auto 
+            bg-linear-to-r from-amber-400 to-amber-500 
+            hover:from-amber-500 hover:to-amber-600 
+            text-gray-900 font-bold 
+            py-2 sm:py-3 px-5 sm:px-6 
+            rounded-full transition-all duration-200 
+            shadow-lg shadow-amber-500/50 hover:shadow-amber-500/70 
+            uppercase tracking-wide text-xs sm:text-base shrink-0"
         >
           Review Cart
         </button>

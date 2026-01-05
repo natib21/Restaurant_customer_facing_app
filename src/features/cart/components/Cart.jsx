@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { CartContext } from "../../../context/CartContext.jsx";
 import { useNavigate } from "react-router-dom";
 
@@ -17,6 +17,39 @@ export default function Cart() {
   function goToOrder() {
     navigate("/order")
   }
+  const prepareOrderData = () => {
+  // 1. Define IDs (These usually come from your Auth or Branch context)
+  const branchId = "670a1b2c3d4e5f6789018888"; 
+  const customerId = "670a1b2c3d4e5f6789018888";
+
+  // 2. Map the frontend cart items to the backend schema
+  const formattedItems = cartItems.map((item) => ({
+    menuItemId: item.id,            // Backend expects the MongoDB ID
+    quantity: item.quantity,
+    notes: item.notes || "",        // Ensures notes is at least an empty string
+    unitPrice: item.price,
+    totalPrice: item.price * item.quantity,
+  }));
+
+  // 3. Assemble the final payload object
+  const orderPayload = {
+    items: formattedItems,
+    customer: customerId,
+    branchId: branchId,
+    notes: "",                      // Global order-level notes
+    subtotal: totalSum,
+    totalAmount: totalSum,          // If you have tax/delivery, add it here
+  };
+  console.log("Order Payload", orderPayload)
+
+  return orderPayload;
+  
+};
+
+useEffect(()=>{
+  prepareOrderData();
+
+},[cartItems, totalSum])
 
   // --- Empty Cart View ---
   if (cartItems.length === 0) {
@@ -40,7 +73,7 @@ export default function Cart() {
     <div className="min-h-screen bg-gray-50 pb-32 md:pb-8"> {/* pb-32 gives space for mobile floating footer */}
       <div className="container mx-auto px-4 py-4 md:py-8">
         
-        <h1 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-4 md:mb-8">
+        <h1 className="text-xl md:text-4xl font-extrabold text-gray-900 mb-4 md:mb-8">
           Your Selection
         </h1>
 
@@ -58,6 +91,7 @@ export default function Cart() {
                 {cartItems.map((item) => (
                   <div key={item.id} className="py-4 first:pt-0 last:pb-0">
                     <div className="flex gap-3">
+        
                      
                       <div className="grow">
                         <div className="flex justify-between">

@@ -24,6 +24,7 @@ export function useFetchMenu(token) {
           }
         });
         setMenu(res.data?.data?.menus || []);
+        console.log("Menu",res.data?.data?.menus)
        
         setRestaurant(res.data?.restaurant)
       } catch (err) {

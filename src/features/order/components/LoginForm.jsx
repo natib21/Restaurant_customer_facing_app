@@ -1,8 +1,8 @@
-import Spinner from "./Spinner";
+import Spinner from "../../../components/Spinner";
 
 export default function LoginForm() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="flex items-center justify-center p-4">
       <div className="relative w-full max-w-md bg-linear-to-r from-gray-900 via-gray-800 to-gray-900 border-t-2 border-amber-400 shadow-2xl p-4 sm:p-6 backdrop-blur-sm rounded-2xl md:rounded-3xl lg:rounded-3xl">
 
         {/* Header */}

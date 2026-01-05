@@ -1,8 +1,12 @@
-import LoginForm from "../components/LoginForm"
+import LoginForm from "../features/order/components/LoginForm"
+import OrderList from "../features/order/components/OrderList"
 
 function Order() {
   return (
-    <div><LoginForm/></div>
+    <div className="flex flex-col">
+       <OrderList/>
+      <LoginForm/>
+    </div>
   )
 }
 

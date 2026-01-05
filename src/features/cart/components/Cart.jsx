@@ -14,6 +14,9 @@ export default function Cart() {
   function handleReturnToMenu() {
     navigate("/menu");
   }
+  function goToOrder() {
+    navigate("/order")
+  }
 
   // --- Empty Cart View ---
   if (cartItems.length === 0) {
@@ -96,7 +99,7 @@ export default function Cart() {
                 <span className="text-2xl font-extrabold text-amber-600">ETB {totalSum.toFixed(2)}</span>
               </div>
               <button
-                onClick={() => alert("Proceeding to Order...")}
+                onClick={() => goToOrder()}
                 className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl shadow-lg transition-transform active:scale-95"
               >
                 PROCEED TO ORDER

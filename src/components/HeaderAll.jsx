@@ -5,19 +5,13 @@ import { useLocation } from "react-router-dom";
 import { CartContext } from "../context/CartContext"
 import { FilteredMenuContext } from "../context/FilteredMenuContext"
 
-/**
- * HeaderAll - A standalone React component
- * Uses react-router-dom for navigation and Framer-like drawer logic.
- */
+
 export default function HeaderAll({ onNavigate }) {
   const navigate = useNavigate()
    const location = useLocation();
 
   const hideSearch = location.pathname === "/cart";
 
-  
-  
-  // State for Sidebar
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [startX, setStartX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)

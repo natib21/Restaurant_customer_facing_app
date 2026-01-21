@@ -7,7 +7,7 @@ const FilteredMenuContext = createContext();
 // FilteredMenuContext.js
 function FilteredMenuProvider({ children }) {
   const [searchValue, setSearchValue] = useState("");
-  const [token, setToken] = useState(null); // The source of truth
+  const [token, setToken] = useState(null); 
   const [sessionError, setSessionError] = useState(null);
   const [isInitializing, setIsInitializing] = useState(true);
 

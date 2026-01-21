@@ -1,5 +1,5 @@
 import { useContext, useMemo, useState } from "react";
-import { CartContext } from "../../../context/CartContext.jsx";
+import { CartContext } from "../context/CartContext";
 import LoginForm from "../features/order/components/LoginForm";
 import OrderList from "../features/order/components/OrderList";
 

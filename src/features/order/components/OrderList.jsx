@@ -17,7 +17,7 @@ function OrderList({ orderPayload }) {
       
       {customer && (
         <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-          <p className="text-blue-700 font-medium">
+          <p className="text-amber-500 font-medium">
             Logged in as customer: <span className="font-bold">{customer}</span>
           </p>
         </div>
@@ -27,13 +27,13 @@ function OrderList({ orderPayload }) {
         <table className="min-w-full table-auto border-collapse">
           <thead>
             <tr className="bg-gray-100">
-              <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
+              <th className="px-4 py-2 text-left text-sm font-semibold text-stone-700 border-b">
                 Quantity
               </th>
-              <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
+              <th className="px-4 py-2 text-left text-sm font-semibold text-stone-700 border-b">
                 Unit Price
               </th>
-              <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
+              <th className="px-4 py-2 text-left text-sm font-semibold text-stone-700 border-b">
                 Total Price
               </th>
             </tr>
@@ -45,10 +45,10 @@ function OrderList({ orderPayload }) {
                   {item.quantity}
                 </td>
                 <td className="px-4 py-2 text-sm text-gray-900 border-b">
-                  ${item.unitPrice.toFixed(2)}
+                  {item.unitPrice.toFixed(2)} <span>ETB</span>
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-900 border-b font-medium">
-                  ${item.totalPrice.toFixed(2)}
+                <td className="px-4 py-2 text-sm text-gray-900 border-b font-regular">
+                  {item.totalPrice.toFixed(2)} <span>ETB</span>
                 </td>
               </tr>
             ))}
@@ -57,13 +57,13 @@ function OrderList({ orderPayload }) {
       </div>
 
       <div className="flex justify-end space-x-4 text-right">
-        <div>
+        {/* <div>
           <p className="text-lg text-gray-700">Subtotal:</p>
-          <p className="text-xl font-bold text-gray-900">${subtotal.toFixed(2)}</p>
-        </div>
+          <p className="text-xl font-bold text-gray-900">ETB {subtotal.toFixed(2)}</p>
+        </div> */}
         <div>
           <p className="text-lg text-gray-700">Total:</p>
-          <p className="text-2xl font-bold text-green-600">${totalAmount.toFixed(2)}</p>
+          <p className="text-xl font-bold text-green-600">ETB {totalAmount.toFixed(2)}</p>
         </div>
       </div>
     </div>

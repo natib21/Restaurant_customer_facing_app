@@ -43,10 +43,13 @@ function FilteredMenuProvider({ children }) {
     init();
   }, [startSession]);
 
-  const filteredMenus = useMemo(() => {
-    return (menu || []).filter((item) =>
-      item.name.toLowerCase().includes(searchValue.toLowerCase())
-    );
+ const filteredMenus = useMemo(() => {
+    const safeSearch = (searchValue || '').toLowerCase(); // Safeguard against any unexpected falsy values
+    return (menu || []).filter((item) => {
+      // Safeguard for item.name in case it's missing or non-string
+      const safeName = (item.name || '').toLowerCase();
+      return safeName.includes(safeSearch);
+    });
   }, [menu, searchValue]);
 
   return (

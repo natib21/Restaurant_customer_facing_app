@@ -28,8 +28,7 @@ export default function Main({ menus }) {
               "
             >
               {/* IMAGE */}
-              <div className="text-stone-800"> {item.id} </div>
-              <div className="text-stone-800"> {item.price}</div>
+              
               <img
                 src={item.image || "/placeholder.svg"}
                 alt={item.name}

@@ -61,7 +61,7 @@ export default function LoginForm({ onLoginSuccess }) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="mb-6 p-3 bg-gray-50 rounded-lg">
-        <p className="text-center text-gray-600 font-medium text-sm">
+        <p className="text-center text-stone-600 font-medium text-sm">
           Please enter your details to order.
         </p>
       </div>

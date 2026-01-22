@@ -2,10 +2,8 @@ import { useContext, useMemo, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import LoginForm from "../features/order/components/LoginForm";
 import OrderList from "../features/order/components/OrderList";
-import Spinner from "../components/Spinner"; // Assuming you have a shared Spinner component
-
-// Hypothetical order creation API endpoint—replace with your actual one
-const CREATE_ORDER_URL = `/api/v1/orders`; // Or hardcode if needed
+import Spinner from "../components/Spinner"; 
+import { placeOrderUrl } from "../url/url";
 
 function Order() {
   const { cartItems, totalSum } = useContext(CartContext);
@@ -56,7 +54,7 @@ function Order() {
         throw new Error("No session token found. Please log in again.");
       }
 
-      const response = await fetch(CREATE_ORDER_URL, {
+      const response = await fetch(placeOrderUrl, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,

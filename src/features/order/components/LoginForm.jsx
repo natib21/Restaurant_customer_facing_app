@@ -43,10 +43,12 @@ export default function LoginForm({ onLoginSuccess }) {
       }
 
       const data = await response.json();
-      // Extract customer ID from the nested structure: data.customer.id
+      // Extract customer details from the nested structure: data.data.customer
       const customerId = data?.data?.customer?.id;
+      const fullName = data?.data?.fullName || name;
+      console.log(fullName) // Fallback to input name if not in response
       if (customerId) {
-        onLoginSuccess(customerId);
+        onLoginSuccess({ id: customerId, name: fullName });
       } else {
         alert("Invalid response from server: No customer ID found.");
       }

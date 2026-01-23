@@ -1,7 +1,7 @@
 import React from "react";
 
 function OrderList({ orderPayload }) {
-  const { items = [], customer, subtotal = 0, totalAmount = 0 } = orderPayload || {};
+  const { items = [], customer = 0, totalAmount = 0 } = orderPayload || {};
 
   if (items.length === 0) {
     return (
@@ -13,7 +13,7 @@ function OrderList({ orderPayload }) {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">Order Summary</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">Summary</h2>
       
       {customer && (
         <div className="mb-4 p-3 bg-blue-50 rounded-lg">

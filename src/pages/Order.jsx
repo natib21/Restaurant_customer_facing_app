@@ -8,8 +8,8 @@ import { placeOrderUrl } from "../url/url";
 function Order() {
   const { cartItems, totalSum } = useContext(CartContext);
   
-  // 1. Local state for customer (initially null until login)
-  const [customerId, setCustomerId] = useState(null);
+  // 1. Local state for customer (initially null until login; now stores {id, name})
+  const [customer, setCustomer] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
@@ -27,20 +27,20 @@ function Order() {
 
     return {
       items: formattedItems,
-      customer: customerId, // This will be null until setCustomerId is called
+      customer: customer?.id || null, // Use customer.id if available
       branchId: branchId,
       notes: "",
       subtotal: totalSum,
       totalAmount: totalSum,
     };
-  }, [cartItems, totalSum, customerId]);
+  }, [cartItems, totalSum, customer]);
 
   // --- ADD THE LOG HERE ---
   console.log("🚀 Current Order Payload:", orderPayload);
 
   // New: Handle order submission after login
   const handleSubmitOrder = async () => {
-    if (!customerId) {
+    if (!customer) {
       setSubmitError("Please log in first.");
       return;
     }
@@ -84,10 +84,10 @@ function Order() {
       {/* 3. OrderList just needs the payload for display */}
       <OrderList orderPayload={orderPayload} />
 
-      {/* 4. LoginForm handles the login and sets the ID back up here */}
-      {!customerId ? (
+      {/* 4. LoginForm handles the login and sets the customer back up here */}
+      {!customer ? (
         <LoginForm 
-          onLoginSuccess={(id) => setCustomerId(id)} 
+          onLoginSuccess={(customerData) => setCustomer(customerData)} 
           onLoginError={(error) => setSubmitError(error)} // Optional: Pass error handler down
         />
       ) : (
@@ -97,7 +97,7 @@ function Order() {
             role="status"
             aria-label="Login successful"
           >
-            Logged in as customer: <strong>{customerId}</strong>
+            Welcome, <strong>{customer.name}</strong>! You're logged in and ready to order.
           </div>
           
           {/* New: Submit button after login */}

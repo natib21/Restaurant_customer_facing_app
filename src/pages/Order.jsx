@@ -112,7 +112,7 @@ function Order() {
               disabled={submitting || cartItems.length === 0}
               className="
                 w-full
-                bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300
+                bg-amber-600 hover:bg-amber-700 disabled:bg-amber-300
                 text-white font-medium
                 py-3 px-4
                 rounded-md
@@ -121,7 +121,7 @@ function Order() {
                 uppercase tracking-wide text-sm
               "
             >
-              {submitting ? <Spinner /> : `Place Order ($${totalSum.toFixed(2)})`}
+              {submitting ? <Spinner /> : `Place Order (ETB ${totalSum.toFixed(2)})`}
             </button>
           </div>
         </div>

@@ -163,7 +163,7 @@ useEffect(() => {
 
           {/* Error message */}
           {submitError && (
-            <div className="p-4 bg-red-50 text-red-800 rounded-lg text-sm border border-red-200">
+            <div className="p-4  bg-amber-600 text-red-800 rounded-lg text-sm border border-red-200">
               {submitError}
             </div>
           )}

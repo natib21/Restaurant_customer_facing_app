@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
+/* --------------------------------------------------
+   Base defaults (safe with Tailwind)
+-------------------------------------------------- */
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -16,60 +16,40 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* --------------------------------------------------
+   Light / Dark mode handled by Tailwind only
+   (NO global color or background overrides)
+-------------------------------------------------- */
 
-/* body {
-  margin: 0;
-  /* display: flex; */
-  /* place-items: center; */
-  /* min-width: 320px;
-  min-height: 100vh; */
-/* } */ 
+html,
+body {
+  height: 100%;
+}
 
-/* h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-} */
+/* --------------------------------------------------
+   Accessibility
+-------------------------------------------------- */
 
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
+/* --------------------------------------------------
+   Spinner (local component styles)
+-------------------------------------------------- */
 
-
-/* Spinner.css */
-
-/* Container for centering the spinner */
-.spinner-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* You can adjust width/height here if you need a specific size, e.g., height: 100vh; */
-}
-
-/* The actual spinning element */
 .spinner {
-  width: 50px; /* Size */
-  height: 50px; /* Size */
-  border: 5px solid #06001e; /* Light grey circle background */
-  border-top: 5px solid #b9a20a; /* Blue color for the top/spinning part */
-  border-radius: 50%;
-  animation: spin 1s linear infinite; /* Animation definition */
+  width: 1.25rem;           /* 20px */
+  height: 1.25rem;
+  border-radius: 9999px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: currentColor;
+  animation: spin 0.8s linear infinite;
 }
 
-/* Keyframe animation for the rotation */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }

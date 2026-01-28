@@ -8,20 +8,18 @@ import Spinner from "../components/Spinner";
 import { placeOrderUrl } from "../url/url";
 
 function Order() {
-  const navigate = useNavigate();
-  
-  // 1. Contexts
   const { cartItems, totalSum, clearCart } = useContext(CartContext);
-  const { customer, logout } = useContext(CustomerContext); // Get customer from global state
-  console.log("Current Customer in Order Page:", customer);
+  const { customer } = useContext(CustomerContext); // Use context here
+  const navigate = useNavigate();
 
-  // 2. Local UI State
+  // Local state for UI flow
+  const [isSwitchingUser, setIsSwitchingUser] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
-  // 3. Prepare order payload (automatically updates when customer context changes)
+  // Prepare order payload
   const orderPayload = useMemo(() => {
-    const branchId = "670a1b2c3d4e5f6789018888"; // Replace with your logic if dynamic
+    const branchId = "670a1b2c3d4e5f6789018888";
 
     const formattedItems = cartItems.map((item) => ({
       menuItemId: item.id,
@@ -33,7 +31,7 @@ function Order() {
 
     return {
       items: formattedItems,
-      customer: customer?.id || null, // Use ID from context
+      customer: customer?.id || null,
       branchId: branchId,
       notes: "",
       subtotal: totalSum,
@@ -41,7 +39,8 @@ function Order() {
     };
   }, [cartItems, totalSum, customer]);
 
-  // 4. Submit Order Logic
+  console.log("🚀 Current Order Payload:", orderPayload);
+
   const handleSubmitOrder = async () => {
     if (!customer) {
       setSubmitError("Please log in first.");
@@ -71,17 +70,27 @@ function Order() {
         body: JSON.stringify(orderPayload),
       });
 
-      const orderData = await response.json();
-
       if (!response.ok) {
-        throw new Error(orderData.message || "Failed to place order");
+        let errorMessage = response.statusText;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          // Fallback if json parsing fails
+        }
+        throw new Error(`Order failed: ${errorMessage}`);
       }
 
+      const orderData = await response.json();
       console.log("✅ Order created successfully:", orderData);
 
       // Success actions
-      clearCart();
+      clearCart();                    // Clear the cart after success
+      
+      // Optional: better UX than alert
+      // toast.success("Order placed successfully!");
       alert("Order placed successfully!");
+
       navigate("/history");
 
     } catch (error) {
@@ -93,38 +102,50 @@ function Order() {
   };
 
   return (
-    <div className="flex flex-col container mx-auto p-4 gap-6 max-w-4xl min-h-screen">
-      
-      {/* 1. Order summary / items list */}
-      <div className="w-full">
-        <OrderList orderPayload={orderPayload} />
-      </div>
+    <div className="flex flex-col container mx-auto p-4 gap-6 max-w-4xl">
+      {/* Order summary / items list */}
+      <OrderList orderPayload={orderPayload} />
 
-      {/* 2. Authentication Section */}
-      {!customer ? (
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <h2 className="text-xl font-bold mb-4 text-gray-800 px-1">Customer Details</h2>
-          <LoginForm /> 
-          {/* LoginForm now updates CustomerContext directly */}
+      {/* Login or Place Order section */}
+      {(!customer || isSwitchingUser) ? (
+        <div className="bg-white p-4 rounded-lg shadow-sm border">
+          <h2 className="text-xl font-semibold mb-4">
+            {isSwitchingUser ? "Change Customer Details" : "Login to continue"}
+          </h2>
+          <LoginForm
+            onCancel={customer ? () => setIsSwitchingUser(false) : null}
+            onSuccess={() => setIsSwitchingUser(false)}
+          />
         </div>
       ) : (
-        /* 3. Success / Order Placement Section */
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 space-y-6 animate-in zoom-in-95 duration-300">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-3 text-green-700 bg-green-50 p-3 rounded-lg flex-1">
-              <div className="bg-green-500 rounded-full p-1 text-white">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
+        <div className="bg-white p-6 rounded-lg shadow-sm border space-y-6">
+          <div
+            className="p-4 bg-green-50 text-green-800 rounded-lg flex items-center justify-between gap-3"
+            role="status"
+            aria-live="polite"
+          >
+            <div className="flex items-center gap-3">
+              <svg
+                className="w-5 h-5 shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
               <div>
-                <p className="text-sm font-bold uppercase tracking-tight">Logged in as</p>
-                <p className="text-lg font-semibold">{customer.name}</p>
+                Welcome back, <strong>{customer.name}</strong>!
+                <br className="sm:hidden" />
+                <span className="text-sm opacity-80 ml-1">You're ready to place your order.</span>
               </div>
             </div>
-            <button 
-              onClick={logout} 
-              className="text-xs text-gray-400 hover:text-red-500 transition-colors underline ml-4 pt-2"
+            
+            <button
+              onClick={() => setIsSwitchingUser(true)}
+              className="text-xs text-gray-500 hover:text-amber-600 underline whitespace-nowrap"
             >
               Change User?
             </button>
@@ -132,8 +153,8 @@ function Order() {
 
           {/* Error message */}
           {submitError && (
-            <div className="p-4 bg-red-50 text-red-700 rounded-lg text-sm border border-red-100 font-medium">
-              ⚠️ {submitError}
+            <div className="p-4 bg-red-50 text-red-800 rounded-lg text-sm border border-red-200">
+              {submitError}
             </div>
           )}
 
@@ -141,15 +162,26 @@ function Order() {
           <button
             onClick={handleSubmitOrder}
             disabled={submitting || cartItems.length === 0}
-            className="w-full flex items-center justify-center gap-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.98] disabled:bg-gray-300 disabled:scale-100 text-white font-bold py-2 px-4 rounded-xl shadow-lg transition-all text-base uppercase tracking-widest"
+            className={`
+              w-full
+              flex items-center justify-center gap-3
+              bg-amber-600 hover:bg-amber-700 
+              disabled:bg-amber-300 disabled:cursor-not-allowed
+              text-white font-medium
+              py-4 px-6
+              rounded-lg
+              shadow-md hover:shadow-lg
+              transition-all
+              text-base uppercase tracking-wider
+            `}
           >
             {submitting ? (
-              <>
+              <div className="flex items-center justify-center gap-3">
                 <Spinner className="w-5 h-5" />
-                <span>Submitting Order...</span>
-              </>
+                <span>Processing...</span>
+              </div>
             ) : (
-              <span>Confirm Order • ETB {totalSum.toFixed(2)}</span>
+              <span>Place Order • ETB {totalSum.toFixed(2)}</span>
             )}
           </button>
         </div>

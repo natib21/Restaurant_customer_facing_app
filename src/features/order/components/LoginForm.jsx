@@ -3,7 +3,7 @@ import { CustomerContext } from "../../../context/CustomerContext";
 import Spinner from "../../../components/Spinner";
 import { createCustomerUrl } from "../../../url/url";
 
-export default function LoginForm() {
+export default function LoginForm({ onCancel, onSuccess }) {
   // Access the login function from our new Context
   const { login } = useContext(CustomerContext);
 
@@ -74,6 +74,10 @@ export default function LoginForm() {
           name: fullName,
           phone: phone 
         });
+        
+        // If we were in "Switch User" mode, notify the parent to close the form
+        if (onSuccess) onSuccess();
+
       } else {
         setError("Invalid response from server: No customer ID found.");
       }
@@ -132,7 +136,7 @@ export default function LoginForm() {
           </p>
         </div>
 
-        <div className="flex justify-center pt-2">
+        <div className="flex flex-col gap-3 pt-2">
           <button
             type="submit"
             disabled={loading}
@@ -147,6 +151,17 @@ export default function LoginForm() {
               "Confirm & Continue"
             )}
           </button>
+
+          {/* BACK BUTTON: Only shows if the user clicked "Change User" and wants to go back */}
+          {onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="w-full bg-gray-50 hover:bg-gray-100 text-gray-500 font-medium py-2 px-4 rounded-md border border-gray-200 transition-colors uppercase tracking-wide text-[10px] sm:text-xs"
+            >
+              ← Back to Order
+            </button>
+          )}
         </div>
       </form>
     </div>

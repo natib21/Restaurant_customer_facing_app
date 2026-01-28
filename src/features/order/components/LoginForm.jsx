@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext , useEffect} from "react";
 import { CustomerContext } from "../../../context/CustomerContext";
 import Spinner from "../../../components/Spinner";
 import { createCustomerUrl } from "../../../url/url";
@@ -11,6 +11,17 @@ export default function LoginForm({ onCancel, onSuccess }) {
   const [phone, setPhone] = useState("2519"); // Ethiopia prefix logic
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Clean up error after 4 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError("");
+      }, 4000);
+
+      return () => clearTimeout(timer); // Cleanup timer if component unmounts
+    }
+  }, [error]);
 
   const handlePhoneChange = (e) => {
     const value = e.target.value;

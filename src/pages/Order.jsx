@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import { CustomerContext } from "../context/CustomerContext"; // Import Customer Context
@@ -100,6 +100,16 @@ function Order() {
       setSubmitting(false);
     }
   };
+
+  // Add this inside your Order() function
+useEffect(() => {
+  if (submitError) {
+    const timer = setTimeout(() => {
+      setSubmitError(null);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }
+}, [submitError]);
 
   return (
     <div className="flex flex-col container mx-auto p-4 gap-6 max-w-4xl">

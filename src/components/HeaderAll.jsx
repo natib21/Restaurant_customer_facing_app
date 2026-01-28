@@ -118,6 +118,14 @@ const hideSearch = hideOnRoutes.includes(location.pathname);
               Cart ({totalItems})
             </button>
             <button
+            onClick={()=> navigateTo("/order")}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-600 hover:bg-gray-50 transition-all text-left"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+              Review Order
+              
+            </button>
+            <button
             onClick={()=> navigateTo("/history")}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-600 hover:bg-gray-50 transition-all text-left"
             >

@@ -1,32 +1,41 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { CustomerContext } from "../../../context/CustomerContext";
 import Spinner from "../../../components/Spinner";
 import { createCustomerUrl } from "../../../url/url";
 
-export default function LoginForm({ onLoginSuccess }) {
+export default function LoginForm() {
+  // Access the login function from our new Context
+  const { login } = useContext(CustomerContext);
+
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("2519"); // Start with the required prefix
+  const [phone, setPhone] = useState("2519"); // Ethiopia prefix logic
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handlePhoneChange = (e) => {
     const value = e.target.value;
 
     // 1. Only allow numbers
     // 2. Ensure it always starts with 2519
-    // 3. Limit to 12 digits (251 + 9 digits)
+    // 3. Limit to 12 digits total
     if (/^\d*$/.test(value) && value.startsWith("2519") && value.length <= 12) {
       setPhone(value);
     } else if (value.length < 4) {
-      // Prevent user from deleting the "2519" prefix entirely
       setPhone("2519");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validation: 251 + 9 digits = 12 characters
-    if (!name || phone.length < 12) {
-      alert("Please enter a valid 9-digit number after the prefix.");
+    setError("");
+
+    // Validation
+    if (!name.trim()) {
+      setError("Please enter your name.");
+      return;
+    }
+    if (phone.length < 12) {
+      setError("Please enter a valid 9-digit number after the 2519 prefix.");
       return;
     }
 
@@ -34,7 +43,7 @@ export default function LoginForm({ onLoginSuccess }) {
     const token = localStorage.getItem("sessionToken");
     
     if (!token) {
-      alert("No session token found. Please log in first.");
+      setError("No session token found. Please refresh the page and try again.");
       setLoading(false);
       return;
     }
@@ -49,66 +58,94 @@ export default function LoginForm({ onLoginSuccess }) {
         body: JSON.stringify({ name, phone }),
       });
 
-      if (!response.ok) throw new Error("Failed to create/login customer");
+      const result = await response.json();
 
-      const data = await response.json();
-      const customerId = data?.data?.customer?.id;
-      const fullName = data?.data?.fullName || name;
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to create/login customer");
+      }
+
+      const customerId = result?.data?.customer?.id;
+      const fullName = result?.data?.fullName || result?.data?.customer?.name || name;
 
       if (customerId) {
-        onLoginSuccess({ id: customerId, name: fullName });
+        // Update the global Context state
+        login({ 
+          id: customerId, 
+          name: fullName,
+          phone: phone 
+        });
       } else {
-        alert("Invalid response from server: No customer ID found.");
+        setError("Invalid response from server: No customer ID found.");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("An error occurred. Please try again.");
+    } catch (err) {
+      console.error("Login Error:", err);
+      setError(err.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md ">
-      <div className="mb-1 p-1 bg-gray-50 rounded-lg">
-        <p className="text-center text-stone-600 font-medium text-sm">
-          Please enter your details to order.
+    <div className="bg-white rounded-lg shadow-md border border-gray-100 p-4">
+      <div className="mb-4 p-2 bg-amber-50 rounded-lg">
+        <p className="text-center text-amber-800 font-medium text-sm">
+          Please enter your details to place your order.
         </p>
       </div>
 
-      <form className="space-y-1" onSubmit={handleSubmit}>
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        {/* Error Message Display */}
+        {error && (
+          <div className="p-2 text-xs text-red-600 bg-red-50 border border-red-200 rounded">
+            {error}
+          </div>
+        )}
+
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+            Full Name
+          </label>
           <input
             type="text"
-            placeholder="e.g., John Doe"
+            placeholder="e.g., Abebe Kebede"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 bg-white text-sm"
+            className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white text-sm outline-none transition-all"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+          <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+            Phone Number
+          </label>
           <input
             type="tel"
             placeholder="2519..."
             value={phone}
             onChange={handlePhoneChange}
-            className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 bg-white text-sm font-mono"
+            className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white text-sm font-mono outline-none transition-all"
             required
           />
-          <p className="mt-1 text-xs text-gray-500">Format: 2519XXXXXXXX</p>
+          <p className="mt-1 text-[10px] text-gray-400">
+            Format: 251 (Country) + 9 (Prefix) + 8 digits
+          </p>
         </div>
 
         <div className="flex justify-center pt-2">
           <button
             type="submit"
             disabled={loading}
-            className="w-full sm:w-3/4 bg-amber-400 hover:bg-amber-500 disabled:bg-amber-300 text-white font-medium py-2 px-4 rounded-md shadow-sm transition-colors uppercase tracking-wide text-xs sm:text-sm"
+            className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-amber-300 text-white font-bold py-3 px-4 rounded-md shadow-sm transition-colors uppercase tracking-widest text-sm"
           >
-            {loading ? <Spinner /> : "Login"}
+            {loading ? (
+              <div className="flex items-center justify-center gap-2">
+                <Spinner className="w-4 h-4" />
+                <span>Authenticating...</span>
+              </div>
+            ) : (
+              "Confirm & Continue"
+            )}
           </button>
         </div>
       </form>

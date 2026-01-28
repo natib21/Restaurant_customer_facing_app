@@ -12,9 +12,11 @@ import HeaderAll from './components/HeaderAll';
 import { FilteredMenuProvider } from './context/FilteredMenuContext';
 import Order from './pages/Order';
 import OrderHistory from './pages/OrderHistory';
+import { CustomerProvider } from './context/CustomerContext';
 
 function App() {
   return (
+    <CustomerProvider>
     <CartProvider>
       <Router>
         <FilteredMenuProvider>
@@ -30,6 +32,7 @@ function App() {
         </FilteredMenuProvider>
       </Router>
     </CartProvider> 
+    </CustomerProvider>
   );
 }
 

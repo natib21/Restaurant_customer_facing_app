@@ -141,7 +141,7 @@ function Order() {
           <button
             onClick={handleSubmitOrder}
             disabled={submitting || cartItems.length === 0}
-            className="w-full flex items-center justify-center gap-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.98] disabled:bg-gray-300 disabled:scale-100 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all text-base uppercase tracking-widest"
+            className="w-full flex items-center justify-center gap-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.98] disabled:bg-gray-300 disabled:scale-100 text-white font-bold py-2 px-4 rounded-xl shadow-lg transition-all text-base uppercase tracking-widest"
           >
             {submitting ? (
               <>

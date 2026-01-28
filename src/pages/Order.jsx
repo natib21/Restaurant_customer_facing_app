@@ -145,31 +145,31 @@ function Order() {
           )}
 
           {/* Place Order Button */}
-          <button
-            onClick={handleSubmitOrder}
-            disabled={submitting || cartItems.length === 0}
-            className={`
-              w-full
-              flex items-center justify-center gap-3
-              bg-amber-600 hover:bg-amber-700 
-              disabled:bg-amber-300 disabled:cursor-not-allowed
-              text-white font-medium
-              py-4 px-6
-              rounded-lg
-              shadow-md hover:shadow-lg
-              transition-all
-              text-base uppercase tracking-wider
-            `}
-          >
-            {submitting ? (
-              <>
-                <Spinner className="w-5 h-5" />
-                <span>Processing...</span>
-              </>
-            ) : (
-              `Place Order • ETB ${totalSum.toFixed(2)}`
-            )}
-          </button>
+         <button
+  onClick={handleSubmitOrder}
+  disabled={submitting || cartItems.length === 0}
+  className={`
+    w-full
+    flex items-center justify-center gap-3
+    bg-amber-600 hover:bg-amber-700 
+    disabled:bg-amber-300 disabled:cursor-not-allowed
+    text-white font-medium
+    py-4 px-6
+    rounded-lg
+    shadow-md hover:shadow-lg
+    transition-all
+    text-base uppercase tracking-wider
+  `}
+>
+  {submitting ? (
+    <div className="flex items-center justify-center gap-3">
+      <Spinner className="w-5 h-5" />
+      <span>Processing...</span>
+    </div>
+  ) : (
+    <span>Place Order • ETB {totalSum.toFixed(2)}</span>
+  )}
+</button>
         </div>
       )}
     </div>

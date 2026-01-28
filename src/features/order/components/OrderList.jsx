@@ -61,8 +61,8 @@ function OrderList({ orderPayload }) {
           <p className="text-lg text-gray-700">Subtotal:</p>
           <p className="text-xl font-bold text-gray-900">ETB {subtotal.toFixed(2)}</p>
         </div> */}
-        <div>
-          <p className="text-lg text-gray-700">Total:</p>
+        <div className="flex gap-1">
+          <p className="text-lg font-bold text-stone-700">Total:</p>
           <p className="text-xl font-bold text-green-600">ETB {totalAmount.toFixed(2)}</p>
         </div>
       </div>

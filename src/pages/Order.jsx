@@ -105,7 +105,7 @@ function Order() {
 
       {/* Login or Place Order section */}
       {!customer ? (
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
+        <div className="bg-white p-4 rounded-lg shadow-sm border">
           <h2 className="text-xl font-semibold mb-4">Login to continue</h2>
           <LoginForm
             onLoginSuccess={(customerData) => setCustomer(customerData)}

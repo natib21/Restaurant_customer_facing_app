@@ -69,14 +69,14 @@ export default function LoginForm({ onLoginSuccess }) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="mb-6 p-3 bg-gray-50 rounded-lg">
+    <div className="bg-white rounded-lg shadow-md ">
+      <div className="mb-1 p-1 bg-gray-50 rounded-lg">
         <p className="text-center text-stone-600 font-medium text-sm">
           Please enter your details to order.
         </p>
       </div>
 
-      <form className="space-y-4" onSubmit={handleSubmit}>
+      <form className="space-y-1" onSubmit={handleSubmit}>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
           <input

@@ -24,7 +24,7 @@ function CartProvider({ children }) {
   }, [cartItems]);
 
   // Add item or increase quantity
-  const addToCart = (menuItem) => {
+  const handleAddToCart = (menuItem) => {
     setCartItems((prev) => {
       const existing = prev.find((item) => item.id === menuItem.id);
       if (existing) {
@@ -39,7 +39,7 @@ function CartProvider({ children }) {
   };
 
   // Update quantity (can be +1 / -1)
-  const updateQuantity = (itemId, change) => {
+  const handleUpdateQuantity = (itemId, change) => {
     setCartItems((prev) =>
       prev
         .map((item) => {
@@ -68,7 +68,7 @@ function CartProvider({ children }) {
   };
 
   // Remove single item
-  const removeItem = (itemId) => {
+  const handleRemoveItem = (itemId) => {
     setCartItems((prev) => prev.filter((item) => item.id !== itemId));
   };
 
@@ -94,10 +94,10 @@ function CartProvider({ children }) {
   const value = useMemo(
     () => ({
       cartItems,
-      addToCart,
-      updateQuantity,
+      handleAddToCart,
+      handleUpdateQuantity,
       setQuantity,        // new: direct quantity control
-      removeItem,
+      handleRemoveItem,
       clearCart,          // new: very useful after order
       totalItems,
       totalSum,

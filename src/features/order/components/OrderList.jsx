@@ -41,13 +41,13 @@ function OrderList({ orderPayload }) {
           <tbody>
             {items.map((item, index) => (
               <tr key={index} className="hover:bg-gray-50">
-                <td className="px-4 py-2 text-sm text-gray-900 border-b">
+                <td className="px-4 py-2 text-sm text-stone-900 border-b">
                   {item.quantity}
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-900 border-b">
+                <td className="px-4 py-2 text-sm text-stone-900 border-b">
                   {item.unitPrice.toFixed(2)} <span>ETB</span>
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-900 border-b font-regular">
+                <td className="px-4 py-2 text-sm text-stone-900 border-b font-regular">
                   {item.totalPrice.toFixed(2)} <span>ETB</span>
                 </td>
               </tr>

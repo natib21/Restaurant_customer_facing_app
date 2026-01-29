@@ -118,7 +118,7 @@ useEffect(() => {
 
       {/* Login or Place Order section */}
       {(!customer || isSwitchingUser) ? (
-        <div className="bg-white p-4 rounded-lg shadow-sm">
+        <div className="bg-white p-4 rounded-lg shadow-xl border-t-2 border-amber-300">
           <h2 className="text-xl font-semibold mb-4">
             {isSwitchingUser ? "Change Customer Details" : "Login to continue"}
           </h2>
@@ -128,7 +128,7 @@ useEffect(() => {
           />
         </div>
       ) : (
-        <div className="bg-white p-6 rounded-lg shadow-sm  space-y-6">
+        <div className="bg-white p-6 rounded-lg shadow-xl border-t-2 border-amber-300  space-y-6">
           <div
             className="p-4 bg-green-50 text-green-800 rounded-lg flex items-center justify-between gap-3"
             role="status"

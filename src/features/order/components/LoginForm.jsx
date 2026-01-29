@@ -101,7 +101,7 @@ export default function LoginForm({ onCancel, onSuccess }) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md  border-amber-100 p-4">
+    <div className="bg-white rounded-lg shadow-xl  p-4">
       <div className="mb-4 p-2 bg-amber-50 rounded-lg">
         <p className="text-center text-amber-800 font-medium text-sm">
           Please enter your details to place your order.

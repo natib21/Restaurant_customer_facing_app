@@ -9,7 +9,7 @@ import { FilteredMenuContext } from "../context/FilteredMenuContext"
 export default function HeaderAll({ onNavigate }) {
   const navigate = useNavigate()
    const location = useLocation();
-  const hideOnRoutes = ["/cart", "/order"];
+  const hideOnRoutes = ["/cart", "/order", "/history"];
 const hideSearch = hideOnRoutes.includes(location.pathname);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)

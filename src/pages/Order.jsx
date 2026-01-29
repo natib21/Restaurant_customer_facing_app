@@ -118,7 +118,7 @@ useEffect(() => {
 
       {/* Login or Place Order section */}
       {(!customer || isSwitchingUser) ? (
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
+        <div className="bg-white p-4 rounded-lg shadow-sm">
           <h2 className="text-xl font-semibold mb-4">
             {isSwitchingUser ? "Change Customer Details" : "Login to continue"}
           </h2>
@@ -128,7 +128,7 @@ useEffect(() => {
           />
         </div>
       ) : (
-        <div className="bg-white p-6 rounded-lg shadow-sm border space-y-6">
+        <div className="bg-white p-6 rounded-lg shadow-sm  space-y-6">
           <div
             className="p-4 bg-green-50 text-green-800 rounded-lg flex items-center justify-between gap-3"
             role="status"
@@ -147,7 +147,7 @@ useEffect(() => {
                 />
               </svg>
               <div>
-                Welcome back, <strong>{customer.name}</strong>!
+                Welcome, <strong>{customer.name}</strong>!
                 <br className="sm:hidden" />
                 <span className="text-sm opacity-80 ml-1">You're ready to place your order.</span>
               </div>
@@ -163,7 +163,7 @@ useEffect(() => {
 
           {/* Error message */}
           {submitError && (
-            <div className="p-4  bg-amber-600 text-red-800 rounded-lg text-sm border border-red-200">
+            <div className="p-4 bg-red-50 text-red-800 rounded-lg text-sm border border-red-200">
               {submitError}
             </div>
           )}

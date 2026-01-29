@@ -1,7 +1,7 @@
 import React from "react";
 
 function OrderList({ orderPayload }) {
-  const { items = [], customer = 0, totalAmount = 0 } = orderPayload || {};
+  const { items = [], totalAmount = 0 } = orderPayload || {};
 
   if (items.length === 0) {
     return (
@@ -12,16 +12,16 @@ function OrderList({ orderPayload }) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-lg shadow-md p-2">
       <h2 className="text-2xl font-bold mb-4 text-gray-800">Summary</h2>
       
-      {customer && (
+      {/* {customer && (
         <div className="mb-4 p-3 bg-blue-50 rounded-lg">
           <p className="text-amber-500 font-medium">
             Logged in as customer: <span className="font-bold">{customer}</span>
           </p>
         </div>
-      )}
+      )} */}
 
       <div className="overflow-x-auto mb-4">
         <table className="min-w-full table-auto border-collapse">

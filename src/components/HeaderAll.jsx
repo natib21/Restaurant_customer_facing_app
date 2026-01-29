@@ -137,7 +137,7 @@ const hideSearch = hideOnRoutes.includes(location.pathname);
 
           <div className="mt-auto pt-6">
             <div className="bg-amber-50 p-4 rounded-2xl border border-amber-100">
-              <p className="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-1">Current Order</p>
+              <p className="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-1">Current in cart</p>
               <p className="text-xs text-amber-900 font-medium">You have {totalItems} items ready.</p>
             </div>
           </div>

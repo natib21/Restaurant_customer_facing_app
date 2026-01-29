@@ -9,8 +9,11 @@ import { FilteredMenuContext } from "../context/FilteredMenuContext"
 export default function HeaderAll({ onNavigate }) {
   const navigate = useNavigate()
    const location = useLocation();
-  const hideOnRoutes = ["/cart", "/order", "/history"];
-const hideSearch = hideOnRoutes.includes(location.pathname);
+  const hideOnRoutesSearch = ["/cart", "/order", "/history"];
+  const hideOnRoutesCart = ["/cart", "/order"];
+
+const hideSearch = hideOnRoutesSearch.includes(location.pathname);
+const hideCart = hideOnRoutesCart.includes(location.pathname);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [startX, setStartX] = useState(0)
@@ -164,7 +167,7 @@ const hideSearch = hideOnRoutes.includes(location.pathname);
           </div>
         </div>
 
-        {!error && !hideSearch && (
+        {!error && !hideCart && (
           <button
             onClick={() => navigateTo("/cart")}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold text-sm transition shadow-sm ${

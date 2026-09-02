@@ -1,0 +1,68 @@
+/* Order Tracking & Live WebSocket Styling */
+
+.stepper-line {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background-color: #bec9c0;
+  z-index: 0;
+  transition: background-color 0.3s ease;
+}
+
+.stepper-line.active {
+  background-color: #005136;
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.9;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 2.5s infinite ease-in-out;
+}
+
+@keyframes pingSubtle {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  70%, 100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.animate-ping-subtle {
+  animation: pingSubtle 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.status-badge-pulse {
+  box-shadow: 0 0 0 0 rgba(0, 81, 54, 0.4);
+  animation: pulseShadow 2s infinite;
+}
+
+@keyframes pulseShadow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 81, 54, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(0, 81, 54, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 81, 54, 0);
+  }
+}
+
+/* Material symbols filled helpers */
+.material-symbols-outlined.fill {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

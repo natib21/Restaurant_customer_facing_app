@@ -1,173 +1,242 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from "../../../context/CartContext.jsx";
-import { useNavigate } from "react-router-dom";
-
-// Define a common padding value for the main content to accommodate the fixed footer
-// Footer height is approximately 6rem (p-4 py-6 md:py-8) + bottom spacing
-const FOOTER_HEIGHT_CLASS = "pb-[10rem] md:pb-[10rem] lg:pb-[8rem]"; 
-
+import { FilteredMenuContext } from "../../../context/FilteredMenuContext.jsx";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Cart() {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     cartItems,
-    totalSum,
-    handleUpdateQuantity: onUpdateQuantity,
-    handleRemoveItem: onRemoveItem,
+    subtotal,
+    handleUpdateQuantity,
+    handleRemoveItem,
   } = useContext(CartContext);
 
+  const { tableNumber } = useContext(FilteredMenuContext);
+
+  const [kitchenNote, setKitchenNote] = useState("");
+  const [showNoteInput, setShowNoteInput] = useState(false);
+
   function handleReturnToMenu() {
-    navigate("/menu")
+    navigate(`/menu${location.search || ""}`);
   }
 
-  // Mobile-first container for the entire page content
-  // min-h-screen ensures it covers the full viewport height
-  const pageContainerClass = `container mx-auto px-4 py-8 min-h-screen bg-gray-50 ${FOOTER_HEIGHT_CLASS}`;
+  function goToPlaceOrder() {
+    navigate(`/order${location.search || ""}`, {
+      state: { kitchenNote },
+    });
+  }
 
-  // --- Empty Cart View (Mobile-First Page Layout) ---
-  if (cartItems.length === 0) {
+  // --- Empty Cart View ---
+  if (!cartItems || cartItems.length === 0) {
     return (
-      <div className={`${pageContainerClass} flex flex-col items-center justify-center text-center pb-8`}>
-        <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm md:max-w-md lg:max-w-lg">
-          <h1 className="text-3xl font-extrabold text-amber-600 mb-4">Your Cart</h1>
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Shopping Cart (0 Items)</h2>
-          <p className="text-gray-600 mb-6">Your cart is currently empty. Head back to the menu to find something delicious!</p>
-          <button
-            onClick={handleReturnToMenu}
-            className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl transition duration-200 text-lg shadow-md"
-          >
-            Return to Menu
-          </button>
+      <div className="min-h-[75vh] flex flex-col items-center justify-center p-6 text-center max-w-md mx-auto">
+        <div className="w-20 h-20 bg-[#efeeeb] text-[#005136] rounded-2xl flex items-center justify-center mb-4 shadow-xs">
+          <span className="material-symbols-outlined text-[36px]">shopping_bag</span>
         </div>
+        <h1 className="text-2xl font-bold text-[#1a1c1a] mb-2">Your Cart is Empty</h1>
+        <p className="text-sm text-[#3f4943] mb-6 leading-relaxed">
+          Looks like you haven't added any dishes yet. Browse our menu to discover delicious meals!
+        </p>
+        <button
+          onClick={handleReturnToMenu}
+          className="w-full py-3.5 px-6 bg-[#005136] hover:bg-[#006c49] text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2"
+        >
+          <span className="material-symbols-outlined text-[18px]">restaurant_menu</span>
+          <span>Explore Menu</span>
+        </button>
       </div>
     );
   }
 
-  // --- Cart Items View (Mobile-First Page Layout with Sticky Footer) ---
+  const taxAmount = subtotal * 0.15; // 15% standard
+  const grandTotal = subtotal + taxAmount;
+
   return (
-    // Outer container for the page
-    <div className="min-h-screen bg-gray-50"> 
-        {/* Main Content Area - Must scroll independently of the footer */}
-        <div className={`${pageContainerClass}`}>
-            
-            {/* Page Title */}
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-6 text-center lg:text-left">Your Selection</h1>
-            
-            {/* Main Cart Content Container - Constrained width on MD/LG */}
-            <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-[#faf9f6] pb-36 md:pb-16 pt-2">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4">
+        {/* Page Title */}
+        <div className="flex items-center justify-between gap-3 mb-6">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleReturnToMenu}
+              className="p-2 -ml-2 rounded-xl text-[#3f4943] hover:text-[#1a1c1a] hover:bg-[#efeeeb] transition-colors"
+              aria-label="Back to menu"
+            >
+              <span className="material-symbols-outlined text-[22px]">arrow_back</span>
+            </button>
+            <h1 className="text-2xl font-bold text-[#1a1c1a] tracking-tight">Your Order</h1>
+          </div>
+          <span className="text-xs font-semibold px-3 py-1 bg-[#efeeeb] text-[#005136] rounded-xl border border-[#bec9c0]/30">
+            Table {tableNumber || "T-101"}
+          </span>
+        </div>
 
-                {/* Header - Separated from the list */}
-                <div className="flex justify-between items-center border-b border-amber-200 pb-3 mb-4">
-                <h2 className="text-xl font-bold text-gray-800 sm:text-2xl">Items Summary</h2>
-                </div>
+        <div className="space-y-6">
+          {/* CART ITEMS LIST */}
+          <div className="bg-[#ffffff] rounded-2xl border border-[#efeeeb] shadow-xs overflow-hidden divide-y divide-[#efeeeb]">
+            {cartItems.map((item) => {
+              const itemKey = item.cartItemId || item.id;
+              const itemUnitPrice = Number(item.unitPrice || item.price || 0);
+              const itemTotal = Number(item.totalPrice || itemUnitPrice * item.quantity);
 
-                {/* List of Cart Items */}
-                <div className="space-y-6">
-                {cartItems.map((item) => (
-                    <div
-                    key={item.id}
-                    className="flex flex-col border-b border-amber-100 last:border-b-0 pb-4"
-                    >
-                    {/* Top Row: Image, Name, Price */}
-                    <div className="flex items-start space-x-3 w-full mb-3">
-                        <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
-                        />
-                        <div className="flex-grow">
-                        <p className="font-semibold text-lg text-gray-800">{item.name}</p>
-                        <p className="text-sm text-gray-500">
-                            Price per item: ETB {item.price.toFixed(2)}
-                        </p>
-                        </div>
+              // Gather modifiers label
+              const optionsSummary = Array.isArray(item.selectedOptions)
+                ? item.selectedOptions.map((o) => o.choiceName).join(", ")
+                : "";
+
+              return (
+                <div key={itemKey} className="p-4 sm:p-5 flex gap-3.5 sm:gap-4 items-center">
+                  {/* Food Image */}
+                  <img
+                    src={item.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&auto=format&fit=crop&q=80"}
+                    alt={item.name}
+                    className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl shrink-0 bg-[#efeeeb]"
+                  />
+
+                  {/* Item info */}
+                  <div className="flex-1 min-w-0 flex flex-col justify-between h-full space-y-1.5">
+                    <div className="flex justify-between items-start gap-2">
+                      <div>
+                        <h3 className="font-bold text-[#1a1c1a] text-sm sm:text-base leading-snug">
+                          {item.name}
+                        </h3>
+                        {optionsSummary && (
+                          <p className="text-xs text-[#3f4943] mt-0.5">{optionsSummary}</p>
+                        )}
+                        {item.specialInstructions && (
+                          <p className="text-[11px] text-[#855300] italic mt-0.5">
+                            "{item.specialInstructions}"
+                          </p>
+                        )}
+                      </div>
+
+                      <button
+                        onClick={() => handleRemoveItem(itemKey)}
+                        className="text-[#6f7a72] hover:text-[#ba1a1a] p-1.5 rounded-lg hover:bg-[#ffdad6]/40 transition-colors"
+                        aria-label="Remove item"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">delete</span>
+                      </button>
                     </div>
 
-                    {/* Bottom Row: Quantity Controls, Subtotal, Remove Button */}
-                    <div className="flex items-center justify-between w-full pl-0 sm:pl-16">
-                        
-                        {/* Quantity Controls */}
-                        <div className="flex items-center border border-amber-300 rounded-lg">
+                    <div className="flex items-center justify-between pt-1">
+                      {/* Quantity Stepper */}
+                      <div className="flex items-center bg-[#efeeeb] rounded-xl px-1.5 py-0.5 border border-[#bec9c0]/40">
                         <button
-                            onClick={() => onUpdateQuantity(item.id, -1)}
-                            className="p-2 text-xl text-amber-700 hover:bg-amber-50 rounded-l-lg transition"
-                            aria-label="Decrease quantity"
+                          onClick={() => handleUpdateQuantity(itemKey, -1)}
+                          className="w-7 h-7 flex items-center justify-center text-[#005136] rounded-lg hover:bg-[#e9e8e5] transition active:scale-95"
+                          aria-label="Decrease quantity"
                         >
-                            –
+                          <span className="material-symbols-outlined text-[16px]">remove</span>
                         </button>
-                        <span className="p-2 font-medium text-gray-800 w-8 text-center">
-                            {item.quantity}
+                        <span className="w-7 text-center font-bold text-xs text-[#1a1c1a]">
+                          {item.quantity}
                         </span>
                         <button
-                            onClick={() => onUpdateQuantity(item.id, 1)}
-                            className="p-2 text-xl text-amber-700 hover:bg-amber-50 rounded-r-lg transition"
-                            aria-label="Increase quantity"
+                          onClick={() => handleUpdateQuantity(itemKey, 1)}
+                          className="w-7 h-7 flex items-center justify-center text-[#005136] rounded-lg hover:bg-[#e9e8e5] transition active:scale-95"
+                          aria-label="Increase quantity"
                         >
-                            +
+                          <span className="material-symbols-outlined text-[16px]">add</span>
                         </button>
-                        </div>
+                      </div>
 
-                        {/* Item Subtotal */}
-                        <p className="font-bold text-lg text-amber-600 w-24 text-right">
-                        ETB {(item.price * item.quantity).toFixed(2)}
-                        </p>
-
-                        {/* Remove Button */}
-                        <button
-                        onClick={() => onRemoveItem(item.id)}
-                        className="text-amber-500 hover:text-red-600 p-2 transition"
-                        aria-label="Remove item"
-                        >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        </button>
+                      {/* Total Item Price */}
+                      <span className="font-bold text-sm sm:text-base text-[#005136]">
+                        {itemTotal.toFixed(2)} ETB
+                      </span>
                     </div>
-                    </div>
-                ))}
+                  </div>
                 </div>
+              );
+            })}
+          </div>
 
-            </div> 
-            {/* End of max-w-4xl content container */}
+          {/* Add a note for the kitchen */}
+          <div className="bg-[#ffffff] rounded-2xl border border-[#efeeeb] p-4 shadow-xs">
+            <button
+              onClick={() => setShowNoteInput(!showNoteInput)}
+              className="w-full flex items-center justify-between text-left text-sm font-semibold text-[#1a1c1a]"
+            >
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[20px] text-[#005136]">
+                  edit_note
+                </span>
+                <span>Add a note for the kitchen</span>
+              </div>
+              <span className="material-symbols-outlined text-[20px] text-[#6f7a72]">
+                {showNoteInput ? "expand_less" : "expand_more"}
+              </span>
+            </button>
 
-        </div>
-        {/* End of scrolling content area */}
+            {showNoteInput && (
+              <div className="mt-3 pt-3 border-t border-[#efeeeb]">
+                <textarea
+                  rows={2}
+                  value={kitchenNote}
+                  onChange={(e) => setKitchenNote(e.target.value)}
+                  placeholder="e.g. Please bring appetizers first, extra napkins, separate dressings..."
+                  className="w-full p-3 text-xs sm:text-sm text-[#1a1c1a] border border-[#e3e2e0] rounded-xl bg-[#faf9f6] focus:bg-white focus:border-[#005136] focus:ring-1 focus:ring-[#005136] outline-none transition resize-none placeholder:text-[#6f7a72]"
+                />
+              </div>
+            )}
+          </div>
 
-        {/* --- Fixed Footer/Action Bar --- */}
-        {/* fixed inset-x-0 bottom-0 makes it stick to the bottom of the screen */}
-        <div className="fixed inset-x-0 bottom-0 bg-white shadow-[0_-5px_15px_rgba(0,0,0,0.1)] p-4 md:p-6 lg:p-4 border-t border-amber-200">
-            <div className="container mx-auto max-w-4xl">
-                
-                {/* Total Line */}
-                <div className="flex justify-between items-center mb-4">
-                    <span className="text-xl sm:text-2xl font-bold text-gray-800">Total:</span>
-                    <span className="text-2xl sm:text-3xl font-extrabold text-amber-600">
-                        ETB {totalSum.toFixed(2)}
-                    </span>
-                </div>
+          {/* Add more dishes button */}
+          <button
+            onClick={handleReturnToMenu}
+            className="w-full py-3 bg-[#efeeeb] hover:bg-[#e9e8e5] text-[#005136] font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5"
+          >
+            <span className="material-symbols-outlined text-[18px]">add</span>
+            <span>Add More Dishes to Order</span>
+          </button>
 
-                {/* Action Buttons */}
-                <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                    <button
-                        onClick={() => alert("Order functionality is not yet implemented!")}
-                        className="w-full sm:w-2/3 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl transition duration-200 shadow-lg uppercase tracking-wider text-lg"
-                    >
-                        Proceed to Order
-                    </button>
-                    
-                    <button
-                        onClick={handleReturnToMenu}
-                        className="w-full sm:w-1/3 border border-amber-500 text-amber-500 hover:bg-amber-50 font-bold py-3 rounded-xl transition duration-200"
-                    >
-                        back to menu 
-                    </button>
-                </div>
-                
+          {/* ORDER SUMMARY */}
+          <div className="bg-[#ffffff] rounded-2xl border border-[#efeeeb] p-5 shadow-xs space-y-3">
+            <h2 className="text-base font-bold text-[#1a1c1a] pb-2 border-b border-[#efeeeb]">
+              Order Summary
+            </h2>
+
+            <div className="space-y-2 text-sm text-[#3f4943]">
+              <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span className="font-semibold text-[#1a1c1a]">{subtotal.toFixed(2)} ETB</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Tax (15%)</span>
+                <span className="font-semibold text-[#1a1c1a]">{taxAmount.toFixed(2)} ETB</span>
+              </div>
+              <div className="pt-3 border-t border-[#efeeeb] flex justify-between items-center text-lg font-bold text-[#1a1c1a]">
+                <span>Total Due</span>
+                <span className="text-[#005136]">{grandTotal.toFixed(2)} ETB</span>
+              </div>
             </div>
+          </div>
         </div>
-        {/* End of Fixed Footer */}
+      </div>
+
+      {/* STICKY BOTTOM PLACE ORDER CTA */}
+      <div className="fixed bottom-16 md:bottom-0 left-0 right-0 z-40 bg-[#ffffff] border-t border-[#efeeeb] p-4 shadow-[0px_-4px_20px_rgba(0,0,0,0.08)]">
+        <div className="max-w-3xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex flex-col">
+            <span className="text-[11px] font-semibold text-[#3f4943] uppercase tracking-wider">
+              Total with Tax
+            </span>
+            <span className="text-lg font-bold text-[#005136]">{grandTotal.toFixed(2)} ETB</span>
+          </div>
+
+          <button
+            onClick={goToPlaceOrder}
+            className="flex-1 max-w-xs bg-[#005136] hover:bg-[#006c49] active:scale-[0.98] text-white font-bold py-3.5 px-6 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm"
+          >
+            <span>Place Order</span>
+            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </button>
+        </div>
+      </div>
     </div>
-  )
+  );
 }

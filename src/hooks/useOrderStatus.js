@@ -225,6 +225,9 @@ export function useOrderStatus(orderId, sessionToken) {
         socketService.offOrderStatusChanged(handleStatusChanged);
         socketService.offItemStatusChanged(handleItemStatusChanged);
         socketService.offConnectionChange(handleConnectionChange);
+        if (orderId) {
+          socketService.leaveOrderRoom(orderId);
+        }
       };
     }
 

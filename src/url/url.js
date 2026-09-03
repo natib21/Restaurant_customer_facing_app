@@ -1,23 +1,35 @@
-const BACKEND_BASE_URL = "https://restaurant-bo.onrender.com";
-const LOCAL_BACK_URL = "http://localhost:8000"
+export const LOCAL_BACK_URL = "http://localhost:8000";
+
+export const getBackendBaseUrl = () => {
+  if (typeof window !== "undefined" && window.__BACKEND_URL__) {
+    return window.__BACKEND_URL__.replace(/\/+$/, "");
+  }
+  if (typeof import.meta !== "undefined" && import.meta.env?.VITE_BACKEND_URL) {
+    return import.meta.env.VITE_BACKEND_URL.replace(/\/+$/, "");
+  }
+  return LOCAL_BACK_URL;
+};
+
+export const BACKEND_BASE_URL = getBackendBaseUrl();
 
 // QR Table Session
-export const startSessionApiUrl = `${LOCAL_BACK_URL}/api/v1/sessions/start`;
-export const sessionUrl = `${LOCAL_BACK_URL}/api/v1/sessions/start?`;
+export const startSessionApiUrl = `${getBackendBaseUrl()}/api/v1/sessions/start`;
+export const sessionUrl = `${getBackendBaseUrl()}/api/v1/sessions/start?`;
 
 // 2. Menu: GET /api/v1/menus/public
-export const getPublicMenuUrl = `${LOCAL_BACK_URL}/api/v1/menu/public`;
-export const getPublicMenuAltUrl = `${LOCAL_BACK_URL}/api/v1/menu/public`;
+export const getPublicMenuUrl = `${getBackendBaseUrl()}/api/v1/menus/public`;
+export const getPublicMenuAltUrl = `${getBackendBaseUrl()}/api/v1/menu/public`;
 
 // 3. Orders: POST /api/v1/orders
-export const placeOrderUrl = `${LOCAL_BACK_URL}/api/v1/orders`;
-export const placeOrderAltUrl = `${LOCAL_BACK_URL}/api/v1/order`;
-export const getOrderUrl = (orderId) => `${LOCAL_BACK_URL}/api/v1/orders/${orderId}`;
-export const getMyOrdersUrl = `${LOCAL_BACK_URL}/api/v1/customer/my-orders`;
+export const placeOrderUrl = `${getBackendBaseUrl()}/api/v1/orders`;
+export const placeOrderAltUrl = `${getBackendBaseUrl()}/api/v1/orders`;
+export const getOrderUrl = (orderId) => `${getBackendBaseUrl()}/api/v1/orders/customer/${orderId}`;
+export const getMyOrdersUrl = `${getBackendBaseUrl()}/api/v1/customer/my-orders`;
 
 // 4. Customer CRM: POST /api/v1/customer/login, GET /api/v1/customer/me
-export const createCustomerUrl = `${LOCAL_BACK_URL}/api/v1/customer/login`;
-export const getCustomerProfileUrl = `${LOCAL_BACK_URL}/api/v1/customer/me`;
-export const feedbackUrl = `${LOCAL_BACK_URL}/api/v1/feedback`;
+export const createCustomerUrl = `${getBackendBaseUrl()}/api/v1/customer/login`;
+export const getCustomerProfileUrl = `${getBackendBaseUrl()}/api/v1/customer/me`;
+export const feedbackUrl = `${getBackendBaseUrl()}/api/v1/feedback`;
+
 
 

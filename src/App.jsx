@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 
 import Menu from "./pages/Menu";
+import MenuDetail from "./pages/MenuDetail";
 import Landing from "./pages/Landing";
 import { CartProvider } from "./context/CartContext";
 import Rcart from "./pages/Rcart";
@@ -19,13 +20,15 @@ import Favorites from "./pages/Favorites";
 import Feedback from "./pages/Feedback";
 import Profile from "./pages/Profile";
 import { CustomerProvider } from "./context/CustomerContext";
+import { BrandingProvider } from "./context/BrandingContext";
 
 function App() {
   return (
-    <CustomerProvider>
-      <CartProvider>
-        <Router>
-          <FilteredMenuProvider>
+    <BrandingProvider>
+      <CustomerProvider>
+        <CartProvider>
+          <Router>
+            <FilteredMenuProvider>
             <div className="min-h-screen flex flex-col bg-[#faf9f6] text-[#1a1c1a]">
               <HeaderAll />
               <div className="flex-1">
@@ -33,6 +36,7 @@ function App() {
                   <Route path="/" element={<Landing />} />
                   <Route path="/qr" element={<Landing />} />
                   <Route path="/menu" element={<Menu />} />
+                  <Route path="/menu/:id" element={<MenuDetail />} />
                   <Route path="/cart" element={<Rcart />} />
                   <Route path="/order" element={<Order />} />
                   <Route path="/orders/:orderId" element={<OrderDetails />} />
@@ -68,10 +72,11 @@ function App() {
               </div>
               <BottomNavBar />
             </div>
-          </FilteredMenuProvider>
-        </Router>
-      </CartProvider>
-    </CustomerProvider>
+            </FilteredMenuProvider>
+          </Router>
+        </CartProvider>
+      </CustomerProvider>
+    </BrandingProvider>
   );
 }
 

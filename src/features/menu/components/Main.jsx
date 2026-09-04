@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
 import { CartContext } from "../../../context/CartContext.jsx";
 import ItemCustomizerModal from "./ItemCustomizerModal.jsx";
+import QuantityModal from "./QuantityModal.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function Main({ menus }) {
   const {
@@ -10,6 +12,8 @@ export default function Main({ menus }) {
   } = useContext(CartContext);
 
   const [selectedItemForModal, setSelectedItemForModal] = useState(null);
+  const [quantityModalItem, setQuantityModalItem] = useState(null);
+  const navigate = useNavigate();
   const [favoriteIds, setFavoriteIds] = useState(() => {
     try {
       const saved = localStorage.getItem("goldenForkFavorites");
@@ -57,7 +61,7 @@ export default function Main({ menus }) {
             >
               {/* FOOD PHOTO & OVERLAY BADGES */}
               <div
-                onClick={() => isAvailable && setSelectedItemForModal(item)}
+                onClick={() => isAvailable && navigate(`/menu/${item.id}`)}
                 className={`relative h-44 sm:h-48 bg-[#efeeeb] overflow-hidden ${
                   isAvailable ? "cursor-pointer" : "cursor-not-allowed"
                 }`}
@@ -107,7 +111,7 @@ export default function Main({ menus }) {
               {/* ITEM CONTENT */}
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <div
-                  onClick={() => isAvailable && setSelectedItemForModal(item)}
+                  onClick={() => isAvailable && navigate(`/menu/${item.id}`)}
                   className={isAvailable ? "cursor-pointer" : ""}
                 >
                   {/* Dish Name & Dietary tags */}
@@ -178,13 +182,35 @@ export default function Main({ menus }) {
                       </button>
                     </div>
                   ) : (
-                    <button
-                      onClick={() => setSelectedItemForModal(item)}
-                      className="px-3.5 py-1.5 bg-[#005136] hover:bg-[#006c49] text-white text-xs font-semibold rounded-xl transition-all shadow-xs flex items-center gap-1 active:scale-95"
-                    >
-                      <span className="material-symbols-outlined text-[15px]">add</span>
-                      <span>Add</span>
-                    </button>
+                    <>
+                      <button
+                        onClick={() => {
+                          const hasOptions = (item.optionGroups && item.optionGroups.length > 0) || (item.options && item.options.length > 0);
+                          if (hasOptions) {
+                            setSelectedItemForModal(item);
+                          } else {
+                            setQuantityModalItem(item);
+                          }
+                        }}
+                        className="px-3.5 py-1.5 bg-[#005136] hover:bg-[#006c49] text-white text-xs font-semibold rounded-xl transition-all shadow-xs flex items-center gap-1 active:scale-95"
+                      >
+                        <span className="material-symbols-outlined text-[15px]">add</span>
+                        <span>Add</span>
+                      </button>
+
+                      {/* Quantity modal for simple quick-add items */}
+                      <QuantityModal
+                        item={quantityModalItem}
+                        isOpen={Boolean(quantityModalItem && quantityModalItem.id === item.id)}
+                        onClose={() => setQuantityModalItem(null)}
+                        onConfirm={(qty) => {
+                          if (quantityModalItem) {
+                            handleAddCustomizedItem({ menuItem: quantityModalItem, selectedOptions: [], specialInstructions: "", quantity: qty });
+                          }
+                          setQuantityModalItem(null);
+                        }}
+                      />
+                    </>
                   )}
                 </div>
               </div>

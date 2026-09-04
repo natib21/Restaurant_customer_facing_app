@@ -77,12 +77,17 @@ export default function Order() {
 
       const newOrderRecord = {
         id: orderId,
+        orderNumber: returnedOrder?.orderNumber || returnedOrder?.orderNo || null,
+        orderType: returnedOrder?.orderType || returnedOrder?.type || finalPayload.orderType || 'dine_in',
+        source: returnedOrder?.source || 'qr',
         items: [...formattedItems],
         totalAmount: returnedOrder?.total || totalSum * 1.15,
         subtotal: returnedOrder?.subtotal || totalSum,
         table: returnedOrder?.tableNumber || savedTable,
         customerName: returnedOrder?.customerName || customer?.name || "Guest",
         customerPhone: returnedOrder?.customerPhone || customer?.phone || null,
+        branch: returnedOrder?.branch || returnedOrder?.branchInfo || null,
+        merchant: (returnedOrder?.branch && returnedOrder.branch.merchant) || returnedOrder?.merchant || null,
         createdAt: returnedOrder?.createdAt || new Date().toISOString(),
         status: returnedOrder?.status || "pending",
       };

@@ -165,28 +165,37 @@ export default function OrderHistory() {
               return (
                 <div
                   key={order.id}
-                  className="bg-[#ffffff] rounded-2xl border border-[#efeeeb] p-5 shadow-xs space-y-4"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => navigate(`/orders/${order.id || order._id}`)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') navigate(`/orders/${order.id || order._id}`);
+                  }}
+                  className="bg-[#ffffff] rounded-2xl border border-[#efeeeb] p-5 shadow-xs space-y-4 cursor-pointer"
                 >
                   <div className="flex justify-between items-start">
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-mono font-bold text-sm text-[#1a1c1a]">
-                          #{order.id}
+                          {order.orderNumber ? `#${order.orderNumber}` : `#${order.id}`}
                         </span>
-                        <span className="text-[11px] text-[#6f7a72]">• Table {order.table}</span>
+                        <span className="text-[11px] text-[#6f7a72]">• Table {order.table || order.tableNumber}</span>
+                        {order.customerName && (
+                          <span className="text-[11px] text-[#6f7a72]">• {order.customerName}</span>
+                        )}
                       </div>
                       <p className="text-xs text-[#3f4943] mt-0.5">{orderDate}</p>
                     </div>
 
-                    <span
-                      className={`text-xs font-bold px-2.5 py-1 rounded-full ${
-                        isCompleted
-                          ? "bg-[#9df4c8]/40 text-[#005136]"
-                          : "bg-[#ffddb8] text-[#855300]"
-                      }`}
-                    >
+                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${isCompleted ? 'bg-[#9df4c8]/40 text-[#005136]' : 'bg-[#ffddb8] text-[#855300]'}`}>
                       {order.status || "In Kitchen"}
                     </span>
+                    {order.orderType && (
+                      <span className="ml-2 text-[11px] px-2 py-0.5 rounded-full bg-[#efeeeb] text-[#3f4943]">{order.orderType}</span>
+                    )}
+                    {order.source && (
+                      <span className="ml-2 text-[11px] px-2 py-0.5 rounded-full bg-[#efeeeb] text-[#3f4943]">{order.source}</span>
+                    )}
                   </div>
 
                   {/* Items summary */}
@@ -214,7 +223,7 @@ export default function OrderHistory() {
 
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => navigate(`/orders/${order.id || order._id}`)}
+                        onClick={(e) => { e.stopPropagation(); navigate(`/orders/${order.id || order._id}`); }}
                         className="px-3 py-1.5 bg-[#81d8ad]/20 hover:bg-[#81d8ad]/35 text-[#005136] text-xs font-bold rounded-xl transition flex items-center gap-1"
                       >
                         <span className="material-symbols-outlined text-[14px]">timer</span>
@@ -222,14 +231,14 @@ export default function OrderHistory() {
                       </button>
 
                       <button
-                        onClick={() => navigate(`/bill${location.search || ""}`)}
+                        onClick={(e) => { e.stopPropagation(); navigate(`/bill${location.search || ""}`); }}
                         className="px-3 py-1.5 bg-[#efeeeb] hover:bg-[#e9e8e5] text-[#1a1c1a] text-xs font-semibold rounded-xl transition"
                       >
                         Bill
                       </button>
 
                       <button
-                        onClick={() => handleReorder(order)}
+                        onClick={(e) => { e.stopPropagation(); handleReorder(order); }}
                         className="px-3 py-1.5 bg-[#005136] hover:bg-[#006c49] text-white text-xs font-semibold rounded-xl transition flex items-center gap-1 shadow-xs"
                       >
                         <span className="material-symbols-outlined text-[14px]">refresh</span>

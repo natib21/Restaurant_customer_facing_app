@@ -1,6 +1,9 @@
-import { createContext, useMemo, useState, useEffect, useCallback } from "react";
+import { createContext, useMemo, useState, useEffect, useCallback, useContext } from "react";
 import { useFetchMenu } from "../hooks/useFetchMenu";
 import { useStartSession } from "../hooks/useStartSession";
+import axios from "axios";
+import { getBranchUrl } from "../url/url";
+import { BrandingContext } from "./BrandingContext";
 
 const FilteredMenuContext = createContext();
 
@@ -33,6 +36,7 @@ function FilteredMenuProvider({ children }) {
   const [currentTime, setCurrentTime] = useState(() => Date.now());
 
   const { startSession } = useStartSession();
+  const { setBranding, defaults: brandingDefaults } = useContext(BrandingContext);
   
   // Menu is ONLY fetched after startSession response has been processed (enabled: isSessionReady)
   const { 
@@ -104,6 +108,36 @@ function FilteredMenuProvider({ children }) {
           if (sessionResult.tableNumber) {
             setTableNumber(sessionResult.tableNumber);
           }
+
+          // Extract branchId from session result (robust extraction)
+          const branchId = sessionResult.branchId || sessionResult.branch?._id || sessionResult.branch?.id || sessionResult.branch || null;
+
+          // Fetch branch & merchant branding details before marking session ready
+          if (branchId) {
+            try {
+              const headers = { "Content-Type": "application/json" };
+              if (sessionResult.sessionToken) headers["Authorization"] = `Bearer ${sessionResult.sessionToken}`;
+              const resp = await axios.get(getBranchUrl(branchId), { headers, timeout: 6000 });
+              let branchData = resp?.data?.data || resp?.data || {};
+              // API may return { data: { branch: { ... } } }
+              branchData = branchData.branch || branchData;
+
+              const merchantName = branchData?.merchant?.businessName || branchData?.merchant?.name || branchData?.merchantName || branchData?.merchant?.merchantName || branchData?.name || brandingDefaults.merchantName;
+
+              const logoUrl = branchData?.merchant?.logo || branchData?.merchant?.settings?.branding?.logo || branchData?.logo || branchData?.branding?.logo || branchData?.merchant?.branding?.logo || brandingDefaults.logoUrl;
+
+              const primaryColor = branchData?.merchant?.brandColor || branchData?.branding?.primaryColor || branchData?.merchant?.branding?.primaryColor || brandingDefaults.primaryColor;
+
+              setBranding({ primaryColor, logoUrl, merchantName });
+            } catch (err) {
+              console.warn("Failed to fetch branch branding, using defaults:", err?.message || err);
+              setBranding(brandingDefaults);
+            }
+          } else {
+            // No branch id in session result - apply defaults
+            setBranding(brandingDefaults);
+          }
+
           setIsSessionReady(true);
         } else {
           setSessionError("Unable to open this table. The QR code signature may be invalid or expired.");
@@ -111,6 +145,7 @@ function FilteredMenuProvider({ children }) {
         }
       } else {
         // No QR params in URL and no valid storage -> initialize default table session
+        setBranding(brandingDefaults);
         setIsSessionReady(true);
       }
     } catch (err) {

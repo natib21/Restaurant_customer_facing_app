@@ -124,3 +124,48 @@ body {
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.4);
 }
+
+/* --------------------------------------------------
+   Branding overrides for existing hard-coded Tailwind arbitrary classes
+   These attribute selectors ensure existing markup using classes like
+   `bg-[#005136]`, `text-[#005136]`, `hover:bg-[#006c49]` adopt the
+   dynamic `--color-primary` / `--color-primary-container` values set by
+   `BrandingContext` without requiring a full refactor.
+-------------------------------------------------- */
+
+/* Backgrounds */
+[class*="bg-[#005136]"] { background-color: var(--color-primary) !important; }
+[class*="bg-[#006c49]"] { background-color: var(--color-primary-container) !important; }
+[class*="bg-[#9df4c8]"] { background-color: var(--color-primary-fixed) !important; }
+[class*="bg-[#81d8ad]"] { background-color: var(--color-primary-fixed-dim) !important; }
+
+/* Hover backgrounds (Tailwind hover: variant appears literally in HTML) */
+[class*="hover:bg-[#006c49]"]:hover { background-color: var(--color-primary-container) !important; }
+[class*="hover:bg-[#005136]"]:hover { background-color: var(--color-primary) !important; }
+
+/* Text colors */
+[class*="text-[#005136]"] { color: var(--color-primary) !important; }
+
+/* Borders */
+[class*="border-[#005136]"] { border-color: var(--color-primary) !important; }
+
+/* Accent/outline/focus rings */
+[class*="ring-[#005136]"] { box-shadow: 0 0 0 3px rgba(0,0,0,0.03), 0 0 0 6px color-mix(in srgb, var(--color-primary) 20%, transparent) !important; }
+
+/* Gradient helpers - map Tailwind gradient classes that use hard-coded primary hexes */
+[class*="from-[#005136]"], [class*="to-[#006c49]"] {
+  background-image: linear-gradient(90deg, var(--color-primary), var(--color-primary-container)) !important;
+}
+
+/* Focus ring fallback using derived translucent vars */
+[class*="focus:ring-[#005136]"]:focus { box-shadow: 0 0 0 6px var(--color-primary-fixed) !important; }
+
+/* Utilities for small white-on-primary badges created using inline bg + text classes */
+[class*="bg-white"][class*="text-[#005136]"] { color: var(--color-primary) !important; }
+
+/* Global: make buttons borderless and square (90°) as requested */
+button, input[type="button"], input[type="submit"], .btn {
+  border: none !important;
+  border-radius: 0 !important;
+}
+

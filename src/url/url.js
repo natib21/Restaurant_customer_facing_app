@@ -32,4 +32,8 @@ export const getCustomerProfileUrl = `${getBackendBaseUrl()}/api/v1/customer/me`
 export const feedbackUrl = `${getBackendBaseUrl()}/api/v1/feedback`;
 
 
+// Branch info
+export const getBranchUrl = (branchId) => `${getBackendBaseUrl()}/api/v1/branch/${branchId}`;
+
+
 

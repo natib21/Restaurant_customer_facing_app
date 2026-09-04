@@ -31,9 +31,12 @@ export const createCustomerUrl = `${getBackendBaseUrl()}/api/v1/customer/login`;
 export const getCustomerProfileUrl = `${getBackendBaseUrl()}/api/v1/customer/me`;
 export const feedbackUrl = `${getBackendBaseUrl()}/api/v1/feedback`;
 
+<<<<<<< HEAD
 
 // Branch info
 export const getBranchUrl = (branchId) => `${getBackendBaseUrl()}/api/v1/branch/${branchId}`;
 
+=======
+>>>>>>> 6efab485007ad435303f04ac0d3c8ba30fdfb117
 
 
